@@ -134,52 +134,52 @@
                                 <div class="row">
                                     <div class="col-md-12" style="margin-bottom: 10px;">> 请谨慎修改相关信息</div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="姓名：" name="name" value="{{.Edu.Name}}" disabled="disabled" />
+                                        <input type="text" placeholder="姓名：" name="name" value="{{.Edu.Name}}"required/>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="性别" name="gender" value="{{.Edu.Gender}}" disabled="disabled" />
+                                        <input type="text" placeholder="性别" name="gender" value="{{.Edu.Gender}}" required/>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="民族" name="nation" onfocus="value='{{.Edu.Nation}}'" required />
+                                        <input type="text" placeholder="民族" name="nation" value="{{.Edu.Nation}}" required />
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="籍贯" name="place" onfocus="value='{{.Edu.Place}}'" required />
+                                        <input type="text" placeholder="籍贯" name="place" value="{{.Edu.Place}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="出生日期" name="birthDay" onfocus="value='{{.Edu.Nation}}'" required />
+                                        <input type="text" placeholder="出生日期" name="birthDay" value="{{.Edu.Nation}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="入学日期" name="enrollDate" onfocus="value='{{.Edu.EnrollDate }}'" required />
+                                        <input type="text" placeholder="入学日期" name="enrollDate" value="{{.Edu.EnrollDate}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="毕(结)业日期" name="graduationDate" onfocus="value='{{.Edu.GraduationDate}}'" required />
+                                        <input type="text" placeholder="毕(结)业日期" name="graduationDate" value="{{.Edu.GraduationDate}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="学校名称" name="schoolName" onfocus="value='{{.Edu.SchoolName}}'" required />
+                                        <input type="text" placeholder="学校名称" name="schoolName" value="{{.Edu.SchoolName}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="学历类别" name="quaType" onfocus="value='{{.Edu.QuaType}}'" required />
+                                        <input type="text" placeholder="学历类别" name="quaType" value="{{.Edu.QuaType}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="层次" name="level" onfocus="value='{{.Edu.Level}}'" required />
+                                        <input type="text" placeholder="层次" name="level" value="{{.Edu.Level}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="毕（结）业" name="graduation" onfocus="value='{{.Edu.Graduation}}'" required />
+                                        <input type="text" placeholder="毕（结）业" name="graduation" value="{{.Edu.Graduation}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="学习形式" name="mode" onfocus="value='{{.Edu.Mode}}'" required />
+                                        <input type="text" placeholder="学习形式" name="mode" value="{{.Edu.Mode}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="专业" name="major" onfocus="value='{{.Edu.Major}}'" required />
+                                        <input type="text" placeholder="专业" name="major" value="{{.Edu.Major}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="学制" name="length" onfocus="value='{{.Edu.Length}}'" required />
+                                        <input type="text" placeholder="学制" name="length" value="{{.Edu.Length}}" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="证书编号" name="certNo" value="{{.Edu.CertNo}}" disabled="disabled" />
+                                        <input type="text" placeholder="证书编号" name="certNo" value="{{.Edu.CertNo}}" required/>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="身份证号" name="entityID" value="{{.Edu.EntityID}}" disabled="disabled" />
+                                        <input type="text" placeholder="身份证号" name="entityID" value="{{.Edu.EntityID}}" required/>
                                     </div>
                                     
                                 </div>
@@ -317,7 +317,6 @@
                 }
             }).fail(function (res) { });
         }
-
     })
 </script>
 </html>

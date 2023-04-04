@@ -293,25 +293,25 @@ func (t *EducationChaincode) updateEdu(stub shim.ChaincodeStubInterface, args []
 		return shim.Error("根据身份证号码查询信息时发生错误")
 	}
 	
-	//result.Name = info.Name
-	result.BirthDay = info.BirthDay == ""? result.BirthDay:info.BirthDay
-	result.Nation = info.Nation == ""? result.Nation:info.Nation
-	result.Gender = info.Gender == ""? result.Gender:info.Gender
-	result.Place = info.Place == ""? result.Place:info.Place
-	//result.EntityID = info.EntityID
-	result.Photo = info.Photo == ""? result.Photo:info.Photo
+	result.Name = info.Name
+	result.BirthDay = info.BirthDay 
+	result.Nation = info.Nation 
+	result.Gender = info.Gender 
+	result.Place = info.Place 
+	result.EntityID = info.EntityID
+	result.Photo = info.Photo 
 
 
-	result.EnrollDate = info.EnrollDate == ""? result.EnrollDate:info.EnrollDate
-	result.GraduationDate = info.GraduationDate == ""? result.GraduationDate:info.GraduationDate
-	result.SchoolName = info.SchoolName == ""? result.SchoolName:info.SchoolName
-	result.Major = info.Major == ""? result.Major:info.Major
-	result.QuaType = info.QuaType == ""? result.QuaType:info.QuaType
-	result.Length = info.Length == ""? result.Length:info.Length
-	result.Mode = info.Mode == ""? result.Mode:info.Mode
-	result.Level = info.Level == ""? result.Level:info.Level
-	result.Graduation = info.Graduation == ""? result.Graduation:info.Graduation
-	//result.CertNo = info.CertNo
+	result.EnrollDate = info.EnrollDate
+	result.GraduationDate = info.GraduationDate
+	result.SchoolName = info.SchoolName
+	result.Major = info.Major 
+	result.QuaType = info.QuaType 
+	result.Length = info.Length 
+	result.Mode = info.Mode 
+	result.Level = info.Level 
+	result.Graduation = info.Graduation
+	result.CertNo = info.CertNo
 
 	_, bl = PutEdu(stub, result)
 	if !bl {

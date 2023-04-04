@@ -133,7 +133,7 @@ func (app *Application) QueryPage(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) FindCertByNoAndName(w http.ResponseWriter, r *http.Request)  {
 	if r.Method == "GET" {
 		data.Flag = false
-		ShowView(w, r, "query2.html", data)
+		ShowView(w, r, "query.html", data)
 	}
 	certNo := r.FormValue("certNo")
 	name := r.FormValue("name")
@@ -171,7 +171,7 @@ func (app *Application) FindByID(w http.ResponseWriter, r *http.Request)  {
 	var edu = service.Education{}
 	json.Unmarshal(result, &edu)
 	if edu.Name != ""{
-		fmt.Println("根据证书编号与姓名查询信息成功：")
+		fmt.Println("根据身份证号码查询信息成功：")
 		fmt.Println(edu)
 		data.Edu = edu
 		data.History = false
