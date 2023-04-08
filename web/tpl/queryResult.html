@@ -40,6 +40,9 @@
         .blog-area .blog-all-comments .blog-comments .author-comments .author-details h4 {
             font-size: 24px;
         }
+        .container{
+            max-width: 1600px;
+        }
     </style>
 </head>
 <body>
@@ -99,6 +102,57 @@
             </div>
         </div>
     </section><!--/breadcrumb area-->
+
+    {{if .History}}
+    <section class="section-padding partner-form section-padding gray-bg">
+        <div class="container" style="max-width: 2400px;">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 centered wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="section-title">
+                        <h2>此学历数据链码调用历史记录</h2>
+                        <p>Historys</p>
+                    </div>
+                </div>
+            </div>   
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="domain-list table-responsive">
+                        <table class="table centered">
+                            <thead>
+                              <tr>
+                                <th scope="col">链码事件编号</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">身份证号</th>
+                                <th scope="col">学校名称</th>
+                                <th scope="col">入学日期</th>
+                                <th scope="col">毕(结)业日期</th>
+                                <th scope="col">专业</th>
+                                <th scope="col">时间戳</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {{range .Edu.Historys}}
+                              <tr>
+                                <th>{{.TxId}}</th>
+                                <th class="cl-red">{{.Education.Name}}</th>
+                                <th>{{.Education.EntityID}}</th>
+                                <th>{{.Education.SchoolName}}</th>
+                                <th>{{.Education.EnrollDate}}</th>
+                                <th>{{.Education.GraduationDate}}</th>
+                                <th>{{.Education.Major}}</th>
+                                <th>{{.Education.TimeStamp}}</th>
+                              </tr>
+                              {{end}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/Domain List-->
+
+    {{end}}
+
     <!--Blog Area-->
     <section class="blog-area section-padding-2">
         <div class="container">
@@ -107,7 +161,7 @@
                     <div class="blog-all-comments">
                         <h3>查询结果如下</h3>
                         <div class="blog-comments">
-                            <div class="author-thumb" style="width: 15%;">
+                            <div class="author-thumb" style="width: 10%;">
                                 <img src="{{.Edu.Photo}}" alt="" style="width: 120px;height: 160px;border-radius: 0%"/>
                             </div>
                             <div class="author-comments">
@@ -121,6 +175,7 @@
                                     {{.Edu.Gender}}
                                 </div>
                                 <p>身份证号：{{.Edu.EntityID}},证书编号：{{.Edu.CertNo}}
+                                    <br>交易时间：{{.Edu.TimeStamp}}
                                     <br>已经查询到相关结果，其详情如下所示。</p>
                             </div>
                         </div>

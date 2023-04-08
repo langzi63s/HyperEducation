@@ -30,7 +30,7 @@ type Education struct {
 	CertNo	string	`json:"CertNo"`	// 证书编号
 
 	Photo	string	`json:"Photo"`	// 照片
-
+	TimeStamp string `json:"TimeStamp"`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
 type Certificate struct {

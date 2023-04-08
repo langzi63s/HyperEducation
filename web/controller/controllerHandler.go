@@ -1,5 +1,3 @@
-
-
 package controller
 
 import (
@@ -102,16 +100,6 @@ func (app *Application) AddEdu(w http.ResponseWriter, r *http.Request) {
 	app.Setup.SaveEdu(edu)
 	/*transactionID, err := app.Setup.SaveEdu(edu)
 
-	data := &struct {
-		CurrentUser User
-		Msg string
-		Flag bool
-	}{
-		CurrentUser:cuser,
-		Flag:true,
-		Msg:"",
-	}
-
 	if err != nil {
 		data.Msg = err.Error()
 	}else{
@@ -174,7 +162,7 @@ func (app *Application) FindByID(w http.ResponseWriter, r *http.Request)  {
 		fmt.Println("根据身份证号码查询信息成功：")
 		fmt.Println(edu)
 		data.Edu = edu
-		data.History = false
+		data.History = true
 		if err != nil {
 			data.Flag = true
 		}

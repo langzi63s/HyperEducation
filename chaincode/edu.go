@@ -1,12 +1,12 @@
 package main
 
 import (
-"github.com/hyperledger/fabric-chaincode-go/shim"
-"github.com/hyperledger/fabric-protos-go/peer"
-"fmt"
-"encoding/json"
-"bytes"
-
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric-protos-go/peer"
+	"fmt"
+	"encoding/json"
+	"bytes"
+	"time"
 )
 
 
@@ -31,7 +31,7 @@ type Education struct {
 	CertNo	string	`json:"CertNo"`	// 证书编号
 
 	Photo	string	`json:"Photo"`	// 照片
-
+	TimeStamp string `json:"TimeStamp"`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
 
@@ -170,12 +170,12 @@ func (t *EducationChaincode) addEdu(stub shim.ChaincodeStubInterface, args []str
 	if exist {
 		return shim.Error("要添加的身份证号码已存在")
 	}
-
+	tm, err := stub.GetTxTimestamp()
+	edu.TimeStamp = time.Unix(tm.Seconds, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
 	_, bl := PutEdu(stub, edu)
 	if !bl {
 		return shim.Error("保存信息时发生错误")
 	}
-
 	err = stub.SetEvent(args[1], []byte{})
 	if err != nil {
 		return shim.Error(err.Error())
@@ -245,10 +245,11 @@ func (t *EducationChaincode) queryEduInfoByEntityID(stub shim.ChaincodeStubInter
 	var hisEdu Education
 	for iterator.HasNext() {
 		hisData, err := iterator.Next()
+
 		if err != nil {
 			return shim.Error("获取edu的历史变更数据失败")
 		}
-
+		
 		var historyItem HistoryItem
 		historyItem.TxId = hisData.TxId
 		json.Unmarshal(hisData.Value, &hisEdu)

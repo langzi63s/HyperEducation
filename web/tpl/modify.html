@@ -134,7 +134,7 @@
                                 <div class="row">
                                     <div class="col-md-12" style="margin-bottom: 10px;">> 请谨慎修改相关信息</div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="姓名：" name="name" value="{{.Edu.Name}}"required/>
+                                        <input type="text" placeholder="姓名：" name="name" value="{{.Edu.Name}}" readonly unselectable="on"/>
                                     </div>
                                     <div class="col-md-3">
                                         <input type="text" placeholder="性别" name="gender" value="{{.Edu.Gender}}" required/>
@@ -179,7 +179,7 @@
                                         <input type="text" placeholder="证书编号" name="certNo" value="{{.Edu.CertNo}}" required/>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="身份证号" name="entityID" value="{{.Edu.EntityID}}" required/>
+                                        <input type="text" placeholder="身份证号" name="entityID" value="{{.Edu.EntityID}}" readonly unselectable="on"/>
                                     </div>
                                     
                                 </div>
