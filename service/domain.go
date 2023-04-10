@@ -31,6 +31,7 @@ type Education struct {
 
 	Photo	string	`json:"Photo"`	// 照片
 	TimeStamp string `json:"TimeStamp"`
+	PhotoHashCode string `json:"PhotoHashCode"`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
 type Certificate struct {

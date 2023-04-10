@@ -12,11 +12,13 @@ var data = &struct {
 	Flag bool
 	Edu service.Education
 	History bool
+	CurPicHashCode string
 }{
 	CurrentUser:User{},
 	Flag:false,
 	Edu:service.Education{},
 	History:false,
+	CurPicHashCode:"",
 }
 func (app *Application) LoginView(w http.ResponseWriter, r *http.Request)  {
 	ShowView(w, r, "login.html", nil)
@@ -96,7 +98,7 @@ func (app *Application) AddEdu(w http.ResponseWriter, r *http.Request) {
 		CertNo:r.FormValue("certNo"),
 		Photo:r.FormValue("photo"),
 	}
-
+	//edu.PhotoHashCode = service.GetPicSha256(edu.Photo)
 	app.Setup.SaveEdu(edu)
 	/*transactionID, err := app.Setup.SaveEdu(edu)
 
@@ -132,6 +134,7 @@ func (app *Application) FindCertByNoAndName(w http.ResponseWriter, r *http.Reque
 		fmt.Println("根据证书编号与姓名查询信息成功：")
 		fmt.Println(edu)
 		data.Edu = edu
+		data.CurPicHashCode = service.GetPicSha256(edu.Photo)
 		data.History = false
 		if err != nil {
 			data.Flag = true
@@ -162,6 +165,7 @@ func (app *Application) FindByID(w http.ResponseWriter, r *http.Request)  {
 		fmt.Println("根据身份证号码查询信息成功：")
 		fmt.Println(edu)
 		data.Edu = edu
+		data.CurPicHashCode = service.GetPicSha256(edu.Photo)
 		data.History = true
 		if err != nil {
 			data.Flag = true

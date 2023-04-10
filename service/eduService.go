@@ -7,11 +7,11 @@ import (
 )
 
 func (t *ServiceSetup) SaveEdu(edu Education) (string, error) {
-
+	edu.PhotoHashCode = GetPicSha256(edu.Photo)
 	eventID := "eventAddEdu"
 	reg, notifier := regitserEvent(t.Client, t.ChaincodeID, eventID)
 	defer t.Client.UnregisterChaincodeEvent(reg)
-
+	
 	// 将edu对象序列化成为字节数组
 	b, err := json.Marshal(edu)
 	if err != nil {

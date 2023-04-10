@@ -29,9 +29,9 @@ type Education struct {
 	Level	string	`json:"Level"`	// 层次
 	Graduation	string	`json:"Graduation"`	// 毕（结）业
 	CertNo	string	`json:"CertNo"`	// 证书编号
-
 	Photo	string	`json:"Photo"`	// 照片
 	TimeStamp string `json:"TimeStamp"`
+	PhotoHashCode string `json:"PhotoHashCode"`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
 
@@ -171,7 +171,7 @@ func (t *EducationChaincode) addEdu(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error("要添加的身份证号码已存在")
 	}
 	tm, err := stub.GetTxTimestamp()
-	edu.TimeStamp = time.Unix(tm.Seconds, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
+	edu.TimeStamp = time.Unix(tm.Seconds+ 3600 * 8, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
 	_, bl := PutEdu(stub, edu)
 	if !bl {
 		return shim.Error("保存信息时发生错误")
@@ -313,7 +313,8 @@ func (t *EducationChaincode) updateEdu(stub shim.ChaincodeStubInterface, args []
 	result.Level = info.Level 
 	result.Graduation = info.Graduation
 	result.CertNo = info.CertNo
-
+	tm, err := stub.GetTxTimestamp()
+	result.TimeStamp = time.Unix(tm.Seconds, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
 	_, bl = PutEdu(stub, result)
 	if !bl {
 		return shim.Error("保存信息信息时发生错误")
