@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+        
+    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/magnific-popup.css" rel="stylesheet">
+    <link href="assets/css/jquery-ui.css" rel="stylesheet">
+
+
+    <link href="assets/css/animate.css" rel="stylesheet">
+    <link href="assets/css/owl.carousel.min.css" rel="stylesheet">
+
+
+    <!-- Main css -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .bttn-small {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+	<div class="preloader">
+		<div class="spinner">
+		   <span class="spinner-rotate"></span>
+		</div>
+	</div><!-- /Preloader -->
+    <!--Header Area-->
+    <header class="header-area gradient-bg">
+        <nav class="navbar navbar-expand-lg main-menu">
+            <div class="container">
+
+                <a class="navbar-brand" href="index.html" style="color: white; font-size: 18px;font-family: 'Open Sans', sans-serif"><img src="assets/images/logo.png" class="d-inline-block align-top" alt="">&nbsp;教育存证共享系统</a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="menu-toggle"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">欢迎登录，{{.CurrentUser.LoginName}}</a>
+                          <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="/index">您的身份类别为{{.CurrentUser.Identity}}</a></li>
+                              <li><a class="dropdown-item" href="/loginout">退出登录</a></li>
+                          </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header><!--/Header Area-->
+
+
+    <!--breadcrumb area-->
+    <section class="breadcrumb-area blue-overlay parallax-window" data-parallax="scroll" data-image-src="assets/images/banner/hero-3.jpg">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 centered">
+                    <div class="banner-title">
+                        <h2>教育存证共享系统</h2>
+                    </div>
+                    <ul>
+                        <li><a href="/index">Home</a></li>
+                            <li>AddCet</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section><!--/breadcrumb area-->
+    <!--Blog Area-->
+    <section class="blog-area section-padding-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"></div>
+                        <div class="blog-comment-form">
+                            <h3>添加四六级证书信息</h3>
+                            <form action="/addCet" method="post" name="addForm">
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-bottom: 10px;">> 请按照输入框提示输入相关信息</div>
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="姓名" name="name" required />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="性别" name="gender" required />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="身份证号" name="entityID" required />
+                                    </div>
+ 
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="等级（填“四”或者“六”）" name="level" required />
+                                    </div>
+                                    <div class="col-md-3" >
+                                        <input type="text" placeholder="考试时期" name="testTime" required />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="准考证号" name="testNo" required />
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="分数" name="score" required />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" placeholder="证书编号" name="certNo" required />
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-12" style="text-align: center;">
+                                    <button type="submit" class="bttn-mid btn-fill">确认提交</button>
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/Blog Area-->
+
+    <!--Footer Area-->
+    <footer class="footer-area section-padding-2 gradient-bg">
+      <div class="container">
+          <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                  <div class="footer-widget">
+                      <h3>关于我们</h3>
+                      <p>此系统基于超级账本平台搭建，现支持学历证书和大学英语四六级证书存证，具有不可篡改、可追溯、安全性等特性！</p>
+                  </div>
+              </div>
+              <div class="col-xl-5 col-lg-5 col-md-6 col-sm-6">
+                  <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                          <div class="footer-widget footer-nav">
+                              <h3>登录</h3>
+                              <ul>
+                                  <li><a href="">登录页面</a></li>
+                                  <li><a href="">注册页面</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                          <div class="footer-widget footer-nav">
+                              <h3>主页</h3>
+                              <ul>
+                                  <li><a href="">主页</a></li>
+                                  <li><a href="">帮助</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                  <div class="footer-widget footer-insta portfolio-gallery">
+                      <h3>声明</h3>
+                      <p>未经学历信息权属人同意,不得将本材科用于违背权属人意愿之用处,学历信息内容标注“*”号,表示该内容不详,学历信息如有修改,请以网站在线查询内容为准则。</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </footer><!--/Footer Area-->
+
+  <!--Copyright Area-->
+  <div class="copyright">
+      <div class="container">
+          <div class="row">
+              <div class="col centered">
+                  <p>Copyright &copy; 2023.Company name All rights reserved.</p>
+              </div>
+          </div>
+      </div>
+  </div><!--/Copyright Area-->
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="assets/js/jquery-migrate.js"></script>
+    <script src="assets/js/jquery-ui.js"></script>
+
+    <script src="assets/js/popper.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <script src="assets/js/parallax.min.js"></script>
+
+    <script src="assets/js/magnific-popup.min.js"></script>
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/js/isotope.pkgd.min.js"></script>
+    
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/scrollUp.min.js"></script>
+    <script src="assets/js/jquery.nice-select.min.js"></script>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
