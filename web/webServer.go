@@ -31,12 +31,19 @@ func WebStart(app controller.Application)  {
 	http.HandleFunc("/addEduInfo", app.AddEduShow)	// 显示添加信息页面
 	http.HandleFunc("/addEdu", app.AddEdu)	// 提交信息请求
 
-	http.HandleFunc("/queryPage", app.QueryPage)	// 转至根据证书编号与姓名查询信息页面
+	http.HandleFunc("/addCetInfo", app.AddCetShow)	
+	http.HandleFunc("/addCet", app.AddCet)	
+	
+	http.HandleFunc("/queryPage", app.QueryPage)	// 转至根据证书编号与姓名查询EDU
 	http.HandleFunc("/query", app.FindCertByNoAndName)	// 根据证书编号与姓名查询信息
 
-	http.HandleFunc("/queryPage2", app.QueryPage2)	// 转至根据身份证号码查询信息页面
-	http.HandleFunc("/query2", app.FindByID)	// 根据身份证号码查询信息
+	http.HandleFunc("/queryPage2", app.QueryPage2)	// 转至根据身份证号码查询EDU
+	http.HandleFunc("/query2", app.FindByID)	
 
+	http.HandleFunc("/queryPage3", app.QueryPage3)	// 转至根据身份证号码查询信息页面
+	http.HandleFunc("/query3", app.FindCetByID)	
+	
+	http.HandleFunc("/history",app.HistoryShow)
 
 	http.HandleFunc("/modifyPage", app.ModifyShow)	// 修改信息页面
 	http.HandleFunc("/modify", app.Modify)	//  修改信息

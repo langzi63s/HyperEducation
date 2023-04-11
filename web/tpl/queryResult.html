@@ -103,57 +103,8 @@
         </div>
     </section><!--/breadcrumb area-->
 
-    {{if .History}}
-    <section class="section-padding partner-form section-padding gray-bg">
-        <div class="container" style="max-width: 2400px;">
-            <div class="row justify-content-center">
-                <div class="col-xl-6 centered wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="section-title">
-                        <h2>此学历数据链码调用历史记录</h2>
-                        <p>Historys</p>
-                    </div>
-                </div>
-            </div>   
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="domain-list table-responsive">
-                        <table class="table centered">
-                            <thead>
-                              <tr>
-                                <th scope="col">链码事件编号</th>
-                                <th scope="col">姓名</th>
-                                <th scope="col">身份证号</th>
-                                <th scope="col">学校名称</th>
-                                <th scope="col">入学日期</th>
-                                <th scope="col">毕(结)业日期</th>
-                                <th scope="col">专业</th>
-                                <th scope="col">时间戳</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            {{range .Edu.Historys}}
-                              <tr>
-                                <th>{{.TxId}}</th>
-                                <th class="cl-red">{{.Education.Name}}</th>
-                                <th>{{.Education.EntityID}}</th>
-                                <th>{{.Education.SchoolName}}</th>
-                                <th>{{.Education.EnrollDate}}</th>
-                                <th>{{.Education.GraduationDate}}</th>
-                                <th>{{.Education.Major}}</th>
-                                <th>{{.Education.TimeStamp}}</th>
-                              </tr>
-                              {{end}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!--/Domain List-->
 
-    {{end}}
-
-    <!--Blog Area-->
+    <!--Info Area-->
     <section class="blog-area section-padding-2">
         <div class="container">
             <div class="row">
@@ -168,7 +119,7 @@
                                 <div class="author-details">                                
                                     <h4>{{.Edu.Name}}</h4>
                                     <div class="comment-reply-btn">
-                                        <a href="/index" class="bttn-small btn-fill"><i class="fa fa-share"></i>返回主页</a>
+                                        <a href="/history?entityID={{.Edu.EntityID}}" class="bttn-small btn-fill"><i class="fa fa-share"></i>查看历史</a>
                                     </div>
                                 </div>
                                 <div class="author-designation">
@@ -187,7 +138,7 @@
                             <div class="author-comments">
                                 <div class="author-details" style="margin-bottom: 10px;">                                
                                     <h4>详情</h4>
-                                    {{if eq .CurrentUser.IsAdmin "T"}}
+                                    {{if eq .CurrentUser.Identity "Member"}}
                                     <div class="comment-reply-btn">
                                         <a href="/modifyPage?certNo={{.Edu.CertNo}}&name={{.Edu.Name}}" class="bttn-small btn-fill"><i class="flaticon-moon"></i>修改数据</a>
                                     </div>

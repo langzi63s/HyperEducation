@@ -34,21 +34,25 @@ type Education struct {
 	PhotoHashCode string `json:"PhotoHashCode"`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
-type Certificate struct {
+type CertificateObj struct {
 	ObjectType	string	`json:"docType"`
 	Name	string	`json:"Name"`		// 姓名
-	SchoolName	string	`json:"SchoolName"`	// 学校名称
-	Department string  `json:"Department"`	//院系
-	Level	string	`json:"Level"`	// 等级
-	EntityID	string	`json:"EntityID"`	// 身份证号
-	CertNo	string	`json:"CertNo"`	// 证书编号
-	Time string `json:"Time"` //考试时间
-	TestNo string `json:"TestNo"` //准考证号
-	Score string `json:"TestNo"` //考试分数
+	Gender	string	`json:"Gender"`		// 性别
+	EntityID	string  `json:"EntityID"`
+	TimeStamp   string  `json:"TimeStamp"`
+	Level	    string	`json:"Level"`	// 等级
+	CertNo	    string	`json:"CertNo"`	// 证书编号
+	TestTime    string  `json:"TestTime"` //考试时间
+	TestNo      string  `json:"TestNo"` //准考证号
+	Score       string  `json:"Score"` //考试分数
 }
 type HistoryItem struct {
 	TxId	string
 	Education	Education
+}
+type CetHistoryItem struct {
+	TxId		string
+	Certificate	CertificateObj
 }
 
 type ServiceSetup struct {

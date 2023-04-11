@@ -83,7 +83,26 @@ func main() {
 		CertNo: "111",
 		Photo: "/static/photo/11.png",
 	}
-
+	cet := service.CertificateObj{
+		Name:"刘嘉楷",
+		Gender:"男",
+		EntityID:"101",
+		Level:"四",
+		CertNo:"1000001",
+		TestTime:"202109",
+		TestNo:"22001",
+		Score:"520",
+	}
+	cet2 := service.CertificateObj{
+		Name:"刘嘉楷",
+		Gender:"男",
+		EntityID:"101",
+		Level:"六",
+		CertNo:"1000002",
+		TestTime:"202212",
+		TestNo:"22002",
+		Score:"510",
+	}
 	serviceSetup, err := service.InitService(info.ChaincodeID, info.ChannelID, info.Orgs[0], sdk)
 	if err!=nil{
 		fmt.Println()
@@ -95,7 +114,18 @@ func main() {
 	}else {
 		fmt.Println("信息发布成功, 交易编号为: " + msg)
 	}
-
+	msg, err = serviceSetup.SaveCet(cet)
+	if err != nil {
+		fmt.Println(err.Error())
+	}else {
+		fmt.Println("信息发布成功, 交易编号为: " + msg)
+	}
+	msg, err = serviceSetup.SaveCet(cet2)
+	if err != nil {
+		fmt.Println(err.Error())
+	}else {
+		fmt.Println("信息发布成功, 交易编号为: " + msg)
+	}
 	result, err := serviceSetup.FindEduInfoByEntityID("101")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -106,7 +136,15 @@ func main() {
 		fmt.Println(edu)
 	}
 
-
+	result, err = serviceSetup.FindCetInfoByEntityID("101")
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		var Certificates []service.CetHistoryItem
+		json.Unmarshal(result, &Certificates)
+		fmt.Println("根据身份证号码查询信息成功：")
+		fmt.Println(Certificates)
+	}
 	app := controller.Application{
 		Setup: serviceSetup,
 	}

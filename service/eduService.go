@@ -31,7 +31,28 @@ func (t *ServiceSetup) SaveEdu(edu Education) (string, error) {
 
 	return string(respone.TransactionID), nil
 }
+func (t *ServiceSetup) SaveCet(cet CertificateObj) (string, error) {
+	eventID := "eventAddCet"
+	reg, notifier := regitserEvent(t.Client, t.ChaincodeID, eventID)
+	defer t.Client.UnregisterChaincodeEvent(reg)
+	
+	b, err := json.Marshal(cet)
+	if err != nil {
+		return "", fmt.Errorf("指定的edu对象序列化时发生错误")
+	}
+	req := channel.Request{ChaincodeID: t.ChaincodeID, Fcn: "addCet", Args: [][]byte{b, []byte(eventID)}}
+	respone, err := t.Client.Execute(req)
+	if err != nil {
+		return "", err
+	}
 
+	err = eventResult(notifier, eventID)
+	if err != nil {
+		return "", err
+	}
+
+	return string(respone.TransactionID), nil
+}
 
 func (t *ServiceSetup) FindEduInfoByEntityID(entityID string) ([]byte, error){
 
@@ -43,10 +64,30 @@ func (t *ServiceSetup) FindEduInfoByEntityID(entityID string) ([]byte, error){
 
 	return respone.Payload, nil
 }
+func (t *ServiceSetup) FindCetInfoByEntityID(entityID string) ([]byte, error){
+
+	req := channel.Request{ChaincodeID: t.ChaincodeID, Fcn: "queryCetInfoByEntityID", Args: [][]byte{[]byte(entityID)}}
+	respone, err := t.Client.Query(req)
+	if err != nil {
+		return []byte{0x00}, err
+	}
+
+	return respone.Payload, nil
+}
 
 func (t *ServiceSetup) FindEduByCertNoAndName(certNo, name string) ([]byte, error){
 
 	req := channel.Request{ChaincodeID: t.ChaincodeID, Fcn: "queryEduByCertNoAndName", Args: [][]byte{[]byte(certNo), []byte(name)}}
+	respone, err := t.Client.Query(req)
+	if err != nil {
+		return []byte{0x00}, err
+	}
+
+	return respone.Payload, nil
+}
+func (t *ServiceSetup) FindCetByCertNoOrTestNo(cetNo, No string) ([]byte, error){
+
+	req := channel.Request{ChaincodeID: t.ChaincodeID, Fcn: "queryCetByCertNoOrTestNo", Args: [][]byte{[]byte(cetNo), []byte(No)}}
 	respone, err := t.Client.Query(req)
 	if err != nil {
 		return []byte{0x00}, err
