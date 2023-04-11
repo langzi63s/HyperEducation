@@ -43,6 +43,8 @@ func WebStart(app controller.Application)  {
 	http.HandleFunc("/queryPage3", app.QueryPage3)	// 转至根据身份证号码查询信息页面
 	http.HandleFunc("/query3", app.FindCetByID)	
 	
+	http.HandleFunc("/queryPage4", app.FindCetByCertNoOrTestNoShow)	// 转至根据身份证号码查询信息页面
+
 	http.HandleFunc("/history",app.HistoryShow)
 
 	http.HandleFunc("/modifyPage", app.ModifyShow)	// 修改信息页面

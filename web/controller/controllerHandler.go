@@ -11,14 +11,13 @@ var data = &struct {
 	CurrentUser User
 	Flag bool
 	Edu service.Education
-	History bool
 	CurPicHashCode string
 	Cets []service.CetHistoryItem
+	CurCet service.CertificateObj
 }{
 	CurrentUser:User{},
 	Flag:false,
 	Edu:service.Education{},
-	History:false,
 	CurPicHashCode:"",
 }
 func (app *Application) LoginView(w http.ResponseWriter, r *http.Request)  {
@@ -52,6 +51,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	ShowView(w, r, "login.html", data)
 }
 func (app *Application) Login_2(w http.ResponseWriter, r *http.Request) {
+	data.Flag = false
 	loginName := r.FormValue("loginName")
 	password := r.FormValue("password")
 
@@ -228,6 +228,30 @@ func (app *Application) FindCetByID(w http.ResponseWriter, r *http.Request)  {
 		ShowView(w, r, "query3.html", data)
 	}
 }
+func (app *Application) FindCetByCertNoOrTestNoShow(w http.ResponseWriter, r *http.Request)  {
+	if r.Method == "GET" {
+		data.Flag = false
+		ShowView(w, r, "query4.html", data)
+	}
+	cetNo := r.FormValue("cetNo")
+	No := r.FormValue("No")
+	result, err := app.Setup.FindCetByCertNoOrTestNo (cetNo,No)
+	var Certificate service.CertificateObj
+	json.Unmarshal(result, &Certificate)
+	if Certificate.CertNo != ""{
+		fmt.Println("根据证书编号或准考证号查询信息成功：")
+		fmt.Println(Certificate)
+		data.CurCet = Certificate
+		data.Flag = true
+		if err != nil {
+			data.Flag = false
+		}
+		ShowView(w, r, "query4.html", data)
+	}else{
+		data.Flag = false
+		ShowView(w, r, "query4.html", data)
+	}
+}
 func (app *Application) HistoryShow(w http.ResponseWriter, r *http.Request)  {
 	entityID := r.FormValue("entityID")
 	result, err := app.Setup.FindEduInfoByEntityID(entityID)
@@ -237,7 +261,6 @@ func (app *Application) HistoryShow(w http.ResponseWriter, r *http.Request)  {
 
 	data.Edu = edu
 	data.Flag=false
-	data.History = true
 	if err != nil {
 		data.Flag = true
 	}
@@ -255,7 +278,6 @@ func (app *Application) ModifyShow(w http.ResponseWriter, r *http.Request)  {
 
 	data.Edu = edu
 	data.Flag=false
-	data.History = true
 	if err != nil {
 		data.Flag = true
 	}
@@ -287,25 +309,6 @@ func (app *Application) Modify(w http.ResponseWriter, r *http.Request) {
 	//transactionID, err := app.Setup.ModifyEdu(edu)
 	app.Setup.ModifyEdu(edu)
 
-	/*data := &struct {
-		Edu service.Education
-		CurrentUser User
-		Msg string
-		Flag bool
-	}{
-		CurrentUser:cuser,
-		Flag:true,
-		Msg:"",
-	}
-
-	if err != nil {
-		data.Msg = err.Error()
-	}else{
-		data.Msg = "新信息添加成功:" + transactionID
-	}
-
-	ShowView(w, r, "modify.html", data)
-	*/
 	r.Form.Set("certNo", edu.CertNo)
 	r.Form.Set("name", edu.Name)
 	app.FindCertByNoAndName(w, r)
