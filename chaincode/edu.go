@@ -31,8 +31,8 @@ type Education struct {
 	CertNo	string	`json:"CertNo"`	// 证书编号
 	Photo	string	`json:"Photo"`	// 照片
 	TimeStamp string `json:"TimeStamp"` //交易时间
-	PhotoHashCode string `json:"PhotoHashCode"` 
-	//Certificate []CertificateObj
+	PhotoHashCode string `json:"PhotoHashCode"`
+	TxID	string  `json:TxID`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
 type CertificateObj struct {
@@ -46,13 +46,13 @@ type CertificateObj struct {
 	TestTime    string  `json:"TestTime"` //考试时间 xxxx年xx月
 	TestNo      string  `json:"TestNo"` //准考证号
 	Score       string  `json:"Score"` //考试分数
+	TxID	string  `json:TxID`
 }
 type HistoryItem struct {
 	TxId	string
 	Education	Education
 }
 type CetHistoryItem struct {
-	TxId		string
 	Certificate	CertificateObj
 }
 
@@ -225,7 +225,9 @@ func (t *EducationChaincode) addEdu(stub shim.ChaincodeStubInterface, args []str
 	if exist {
 		return shim.Error("要添加的身份证号码已存在")
 	}
-	tm, err := stub.GetTxTimestamp()
+	tm,_ := stub.GetTxTimestamp()
+	id := stub.GetTxID()
+	edu.TxID = id
 	edu.TimeStamp = time.Unix(tm.Seconds+ 3600 * 8, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
 	_, bl := PutEdu(stub, edu)
 	if !bl {
@@ -254,7 +256,9 @@ func (t *EducationChaincode) addCet(stub shim.ChaincodeStubInterface, args []str
 	if exist {
 		return shim.Error("信息已存在")
 	}
-	tm, err := stub.GetTxTimestamp()
+	tm,_ := stub.GetTxTimestamp()
+	id := stub.GetTxID()
+	cet.TxID = id
 	cet.TimeStamp = time.Unix(tm.Seconds+ 3600 * 8, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
 	_, bl := PutCet(stub, cet)
 	if !bl {
@@ -398,7 +402,7 @@ func (t *EducationChaincode) queryCetInfoByEntityID(stub shim.ChaincodeStubInter
 		}
 		
 		//_, compositeKeyParts,_ := stub.SplitCompositeKey(hisData.Key)
-		var historyItem CetHistoryItem
+		var historyItem CetHistoryItem		
 		json.Unmarshal(hisData.Value, &hisCet)
 		if hisData.Value == nil {
 			var empty CertificateObj
@@ -455,7 +459,8 @@ func (t *EducationChaincode) updateEdu(stub shim.ChaincodeStubInterface, args []
 	result.Level = info.Level 
 	result.Graduation = info.Graduation
 	result.CertNo = info.CertNo
-	tm, err := stub.GetTxTimestamp()
+	tm,_ := stub.GetTxTimestamp()
+	//pb,_  := stub.GetSignedProposal()
 	result.TimeStamp = time.Unix(tm.Seconds + 8 * 3600, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
 	_, bl = PutEdu(stub, result)
 	if !bl {

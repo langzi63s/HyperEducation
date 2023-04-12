@@ -32,6 +32,7 @@ type Education struct {
 	Photo	string	`json:"Photo"`	// 照片
 	TimeStamp string `json:"TimeStamp"`
 	PhotoHashCode string `json:"PhotoHashCode"`
+	TxID	string  `json:TxID`
 	Historys	[]HistoryItem	// 当前edu的历史记录
 }
 type CertificateObj struct {
@@ -45,13 +46,13 @@ type CertificateObj struct {
 	TestTime    string  `json:"TestTime"` //考试时间
 	TestNo      string  `json:"TestNo"` //准考证号
 	Score       string  `json:"Score"` //考试分数
+	TxID	string  `json:TxID`
 }
 type HistoryItem struct {
 	TxId	string
 	Education	Education
 }
 type CetHistoryItem struct {
-	TxId		string
 	Certificate	CertificateObj
 }
 

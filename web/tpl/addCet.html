@@ -36,6 +36,14 @@
         .bttn-small {
             font-size: 15px;
         }
+        select{
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: 2px solid #E5E5E5;
+            text-indent: 10px;
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -102,14 +110,20 @@
                                         <input type="text" placeholder="姓名" name="name" required />
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="性别" name="gender" required />
+                                        <select name="gender">
+                                            <option value="男">男</option>
+                                            <option value="女">女</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-3">
                                         <input type="text" placeholder="身份证号" name="entityID" required />
                                     </div>
  
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="等级（填“四”或者“六”）" name="level" required />
+                                        <select name="level">
+                                            <option value="四">四级</option>
+                                            <option value="六">六级</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-3" >
                                         <input type="text" placeholder="考试时期" name="testTime" required />

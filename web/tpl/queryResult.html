@@ -40,9 +40,6 @@
         .blog-area .blog-all-comments .blog-comments .author-comments .author-details h4 {
             font-size: 24px;
         }
-        .container{
-            max-width: 1600px;
-        }
     </style>
 </head>
 <body>
@@ -126,7 +123,7 @@
                                     {{.Edu.Gender}}
                                 </div>
                                 <p>身份证号：{{.Edu.EntityID}},证书编号：{{.Edu.CertNo}}
-                                    <br>交易时间：{{.Edu.TimeStamp}}
+                                    <br>交易时间：{{.Edu.TimeStamp}},交易编号：{{.Edu.TxID}}
                                     <br>链上已存图片哈希：{{.Edu.PhotoHashCode}}
                                     <br>左侧图片哈希：{{.CurPicHashCode}}</p>
                             </div>

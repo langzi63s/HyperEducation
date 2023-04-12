@@ -66,10 +66,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">在线验证学历</a>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">在线验证CET证书</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/queryPage">根据证书编号查询</a></li>
-                                <li><a class="dropdown-item" href="/queryPage2">根据身份证号查询</a></li>
+                                <li><a class="dropdown-item" href="/queryPage4">根据证书编号或准考证号查询</a></li>
+                                <li><a class="dropdown-item" href="/queryPage3">根据身份证号查询</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -122,6 +122,7 @@
                                     <a href=""><i class="flaticon-refresh"></i> 大学英语考试{{.Certificate.Level}}级，考试时间：{{.Certificate.TestTime}}，分数：{{.Certificate.Score}}</a>
                                     <p style="font-size: large;"><strong>准考证号：</strong> {{.Certificate.TestNo}}
                                     <br><strong>证书编号：</strong> {{.Certificate.CertNo}}
+                                    <br><strong>交易编号：</strong> {{.Certificate.TxID}}
                                     <br><strong>交易时间：</strong> {{.Certificate.TimeStamp}}
                                     </p>
                                 </li>

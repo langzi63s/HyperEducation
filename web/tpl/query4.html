@@ -88,6 +88,7 @@
                         <li><a href="/index">Home</a></li>
                             <li>QueryCetInfoByCertNoOrTestNo</li>
                     </ul>
+                    <br>
                     <form action="/queryPage4" method="post">
                         <input type="text" name="cetNo" placeholder="证书编号|准考证号" required>
                         <select name="No">
@@ -131,6 +132,7 @@
                                     <br><strong>身份证号：</strong> {{.CurCet.EntityID}}
                                     <br><strong>准考证号：</strong> {{.CurCet.TestNo}}
                                     <br><strong>证书编号：</strong> {{.CurCet.CertNo}}
+                                    <br><strong>交易编号：</strong> {{.CurCet.TxID}}
                                     <br><strong>交易时间：</strong> {{.CurCet.TimeStamp}}
                                     </p>
                                 </li>
