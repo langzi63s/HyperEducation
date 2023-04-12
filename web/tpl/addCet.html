@@ -107,7 +107,7 @@
                                 <div class="row">
                                     <div class="col-md-12" style="margin-bottom: 10px;">> 请按照输入框提示输入相关信息</div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="姓名" name="name" required />
+                                        <input type="text" placeholder="姓名" name="name" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
                                     </div>
                                     <div class="col-md-3">
                                         <select name="gender">
@@ -116,7 +116,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="身份证号" name="entityID" required />
+                                        <input type="text" placeholder="身份证号" name="entityID" pattern="[0-9]{17}[0-9|X|x]" title="18位身份证号（全数字或结尾为X|x）" required />
                                     </div>
  
                                     <div class="col-md-3">
@@ -126,17 +126,17 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3" >
-                                        <input type="text" placeholder="考试时期" name="testTime" required />
+                                        <input type="text" placeholder="考试时期（格式xxxx年xx月）" pattern="^20[0-9]{2}年[[0[1-9]]|[10|11|12]]月$" title="xxxx年xx月" name="testTime" required />
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="准考证号" name="testNo" required />
+                                        <input type="text" placeholder="准考证号（15位准考证号）" name="testNo" pattern="[0-9]{15}" title="15位准考证号(全数字)" required/>
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="分数" name="score" required />
+                                        <input type="number" placeholder="分数（0-710）" name="score" min="0" max="710" required/>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="证书编号" name="certNo" required />
+                                        <input type="text" placeholder="证书编号（15位证书编号）" name="certNo" pattern="[0-9]{15}" title="15位证书编号(全数字)" required/>
                                     </div>
                                     
                                 </div>

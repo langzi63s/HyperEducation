@@ -113,7 +113,7 @@
                 <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
                     <form action="/query2" class="row apply-form" method="post" name="queryForm">
                         <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12">
-                            <input type="text" placeholder="请输入正确的身份证号码" name="entityID" required>
+                            <input type="text" placeholder="请输入正确的身份证号码（18位身份证号）" name="entityID" pattern="[0-9]{17}[0-9|X|x]" title="18位身份证号（全数字或结尾为X|x）" required>
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12" style="text-align: center;">
                             <a href="/help">Help*</a>

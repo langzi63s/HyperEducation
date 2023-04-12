@@ -68,8 +68,8 @@ func main() {
 		Name: "刘嘉楷",
 		Gender: "男",
 		Nation: "汉",
-		EntityID: "101",
-		Place: "江西",
+		EntityID: "32243120011221001X",
+		Place: "江西吉安",
 		BirthDay: "2001年12月21日",
 		EnrollDate: "2019年9月",
 		GraduationDate: "2023年7月",
@@ -80,13 +80,13 @@ func main() {
 		Mode: "普通全日制",
 		Level: "本科",
 		Graduation: "毕业",
-		CertNo: "111",
+		CertNo: "108294189014681257",
 		Photo: "/static/photo/11.png",
 	}
 	cet := service.CertificateObj{
 		Name:"刘嘉楷",
 		Gender:"男",
-		EntityID:"101",
+		EntityID:"32243120011221001X",
 		Level:"四",
 		CertNo:"1000001",
 		TestTime:"202109",
@@ -96,7 +96,7 @@ func main() {
 	cet2 := service.CertificateObj{
 		Name:"刘嘉楷",
 		Gender:"男",
-		EntityID:"101",
+		EntityID:"32243120011221001X",
 		Level:"六",
 		CertNo:"1000002",
 		TestTime:"202212",
@@ -126,7 +126,7 @@ func main() {
 	}else {
 		fmt.Println("信息发布成功, 交易编号为: " + msg)
 	}
-	result, err := serviceSetup.FindEduInfoByEntityID("101")
+	result, err := serviceSetup.FindEduInfoByEntityID("32243120011221001X")
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
@@ -136,7 +136,7 @@ func main() {
 		fmt.Println(edu)
 	}
 
-	result, err = serviceSetup.FindCetInfoByEntityID("101")
+	result, err = serviceSetup.FindCetInfoByEntityID("32243120011221001X")
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {

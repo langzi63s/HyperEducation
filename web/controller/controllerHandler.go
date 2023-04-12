@@ -153,17 +153,15 @@ func (app *Application) FindCertByNoAndName(w http.ResponseWriter, r *http.Reque
 	}
 	certNo := r.FormValue("certNo")
 	name := r.FormValue("name")
-	result, err := app.Setup.FindEduByCertNoAndName(certNo, name)
+	result,err := app.Setup.FindEduByCertNoAndName(certNo, name)
 	var edu = service.Education{}
 	json.Unmarshal(result, &edu)
-	if edu.Name != ""{
+	if err == nil{
 		fmt.Println("根据证书编号与姓名查询信息成功：")
 		fmt.Println(edu)
 		data.Edu = edu
+		data.Flag = false
 		data.CurPicHashCode = service.GetPicSha256(edu.Photo)
-		if err != nil {
-			data.Flag = true
-		}
 		ShowView(w, r, "queryResult.html", data)
 	}else{
 		data.Flag = true

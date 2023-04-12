@@ -141,7 +141,7 @@
                                 <div class="row">
                                     <div class="col-md-12" style="margin-bottom: 10px;">> 请按照输入框提示输入相关信息</div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="姓名" name="name" required />
+                                        <input type="text" placeholder="姓名" name="name" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
                                     </div>
                                     <div class="col-md-3">
                                         <select name="gender">
@@ -150,25 +150,33 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="民族" name="nation" required />
+                                        <input type="text" placeholder="民族" name="nation" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" placeholder="籍贯" name="place" required />
+                                        <input type="text" placeholder="籍贯" name="place" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="出生日期" name="birthDay" required />
+                                        <input type="date" placeholder="出生日期" name="birthDay" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="入学日期" name="enrollDate" required />
+                                        <input type="date" placeholder="入学日期" name="enrollDate" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="毕(结)业日期" name="graduationDate" required />
+                                        <input type="date" placeholder="毕(结)业日期" name="graduationDate" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="学校名称" name="schoolName" required />
+                                        <input type="text" placeholder="学校名称" name="schoolName" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="学历类别" name="quaType" required />
+                                        <select name="quaType">
+                                            <option value="全日制普通本科">全日制普通本科</option>
+                                            <option value="全日制普通第二学士学位">全日制普通第二学士学位</option>
+                                            <option value="全日制研究生">全日制研究生</option>
+                                            <option value="非全日制研究生">非全日制研究生</option>
+                                            <option value="全日制普通博士研究生">全日制普通博士研究生</option>
+                                            <option value="全日制普通专科（高职）">全日制普通专科（高职）</option>
+                                            <option value="普通中专">普通中专</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-4">
                                         <select name="level">
@@ -193,20 +201,21 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="专业" name="major" required />
+                                        <input type="text" placeholder="专业" name="major" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
                                     </div>
                                     <div class="col-md-4">
                                         <select name="length">
-                                            <option value="四年">四年</option>
-                                            <option value="五年">五年</option>
+                                            <option value="四年">三年制</option>
+                                            <option value="四年">四年制</option>
+                                            <option value="五年">五年制</option>
                                             <option value="其他">其他</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="证书编号" name="certNo" required />
+                                        <input type="text" placeholder="证书编号" name="certNo" pattern="[0-9]{18}" title="18位证书编号(全数字)" required />
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" placeholder="身份证号" name="entityID" required />
+                                        <input type="text" placeholder="身份证号" name="entityID" pattern="[0-9]{17}[0-9|X|x]" title="18位身份证号（全数字或结尾为X|x）" required />
                                     </div>
                                     
                                 </div>
@@ -344,19 +353,6 @@
                 }
             }).fail(function (res) { });
         }
-        /*
-        var inputs = $('input[type="text"]');
-        // 提交按钮
-        $('#bnt').click(function() {
-            // 如果为空 报错提示
-            for (var i = 0; i < inputs.length; i++) {
-                if (!($(inputs[i]).val())) {
-                    return;
-                }
-            }
-            $("form[name='addForm']").submit()
-        })
-        */
     })
 </script>
 </html>

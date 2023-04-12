@@ -112,10 +112,10 @@
                 <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
                     <form action="/query" class="row apply-form" method="post" name="queryForm">
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                          <input type="text" placeholder="证书编号" name="certNo" required>
+                          <input type="text" placeholder="证书编号" name="certNo" pattern="[0-9]{18}" title="18位证书编号(全数字)" required>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                            <input type="text" placeholder="姓名" name="name" required>
+                            <input type="text" placeholder="姓名" name="name" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文名" required>
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12" style="text-align: center;">
                             <a href="/help">Help*</a>

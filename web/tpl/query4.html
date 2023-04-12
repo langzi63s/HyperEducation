@@ -90,7 +90,7 @@
                     </ul>
                     <br>
                     <form action="/queryPage4" method="post">
-                        <input type="text" name="cetNo" placeholder="证书编号|准考证号" required>
+                        <input type="text" name="cetNo" placeholder="证书编号|准考证号" pattern="[0-9]{15}" title="15位证书编号|准考证号(全数字)" required>
                         <select name="No">
                             <option value="1">证书编号</option>
                             <option value="2">准考证号</option>
