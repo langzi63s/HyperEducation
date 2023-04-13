@@ -88,9 +88,9 @@ func main() {
 		Gender:"男",
 		EntityID:"32243120011221001X",
 		Level:"四",
-		CertNo:"1000001",
-		TestTime:"202109",
-		TestNo:"22001",
+		CertNo:"211231005003443",
+		TestTime:"2021年09月",
+		TestNo:"310052221201818",
 		Score:"520",
 	}
 	cet2 := service.CertificateObj{
@@ -98,9 +98,9 @@ func main() {
 		Gender:"男",
 		EntityID:"32243120011221001X",
 		Level:"六",
-		CertNo:"1000002",
-		TestTime:"202212",
-		TestNo:"22002",
+		CertNo:"221231005003442",
+		TestTime:"2022年12月",
+		TestNo:"310063222201815",
 		Score:"510",
 	}
 	serviceSetup, err := service.InitService(info.ChaincodeID, info.ChannelID, info.Orgs[0], sdk)

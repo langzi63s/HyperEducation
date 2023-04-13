@@ -97,7 +97,7 @@ func (t *ServiceSetup) FindCetByCertNoOrTestNo(cetNo, No string) ([]byte, error)
 }
 
 func (t *ServiceSetup) ModifyEdu(edu Education) (string, error) {
-
+	edu.PhotoHashCode = GetPicSha256(edu.Photo)
 	eventID := "eventModifyEdu"
 	reg, notifier := regitserEvent(t.Client, t.ChaincodeID, eventID)
 	defer t.Client.UnregisterChaincodeEvent(reg)

@@ -25,7 +25,7 @@
 
     <!-- Main css -->
     <link href="assets/css/main.css" rel="stylesheet">
-
+    <link href="assets/css/popwindow.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -87,6 +87,28 @@
 		   <span class="spinner-rotate"></span>
 		</div>
 	</div><!-- /Preloader -->
+    {{if not .DataOk}}
+    <div id="popout">
+        <div class="popout">
+            <div>
+                <p id="title">提示</p>
+                <p id="msg">{{.Msg}}</p>
+            </div>
+            <p><button type="button" name="button">好的</button></p>
+        </div>
+    </div>
+    {{end}}
+    {{if .Flag}}
+    <div id="popout">
+        <div class="popout">
+            <div>
+                <p id="title">提示</p>
+                <p id="msg">{{.Msg}}</p>
+            </div>
+            <p><a href="/index"><button type="button" name="button">好的</button></a></p>
+        </div>
+    </div>
+    {{end}}
     <!--Header Area-->
     <header class="header-area gradient-bg">
         <nav class="navbar navbar-expand-lg main-menu">

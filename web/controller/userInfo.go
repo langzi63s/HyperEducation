@@ -6,19 +6,30 @@ import "education/service"
 type Application struct {
 	Setup *service.ServiceSetup
 }
-type Userinfo struct {
-	EntityID	string
-}
+
 type User struct {
 	LoginName	string
 	Password	string
 	Identity 	string
-	IsAdmin		string  //具有学历修改权限
-	Info		Userinfo
+	IdentificationCode	string
 }
 
+type Proposer struct {
+	Userinfo User
+	ProTime string
+}
 
+type CetWaitingToApproveStruct struct{
+	proposer Proposer
+	cetItem service.CertificateObj
+}
+type EduWaitingToApproveStruct struct{
+	proposer Proposer
+	eduItem service.Education
+}
 var users []User
+var CetWaitingToApproveList []CetWaitingToApproveStruct
+var EduWaitingToApproveList []EduWaitingToApproveStruct
 const(
 	Admin = "Admin"
 	Member = "Member"

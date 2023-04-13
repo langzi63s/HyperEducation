@@ -460,8 +460,8 @@ func (t *EducationChaincode) updateEdu(stub shim.ChaincodeStubInterface, args []
 	result.Graduation = info.Graduation
 	result.CertNo = info.CertNo
 	tm,_ := stub.GetTxTimestamp()
-	//pb,_  := stub.GetSignedProposal()
 	result.TimeStamp = time.Unix(tm.Seconds + 8 * 3600, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
+	result.TxID = stub.GetTxID()
 	_, bl = PutEdu(stub, result)
 	if !bl {
 		return shim.Error("保存信息信息时发生错误")

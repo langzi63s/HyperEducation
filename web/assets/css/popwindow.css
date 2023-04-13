@@ -1,0 +1,59 @@
+
+#popout{
+    width: 100%;
+    height: 100%;
+    font-family: '微软雅黑';
+    background-color: rgba(0,0,0,.5);
+    position: absolute;
+    z-index: 2;
+    display: block;
+}
+.popout{
+    width: 600px;
+    height: auto;
+    line-height: 24px;
+    color: #000;
+    font-size: 24px;
+    background: #fff;
+    padding: 30px;
+    position: relative;
+    margin: auto;
+    top:40%;
+    z-index:2;
+    border-radius: 2px;
+}
+#title{
+    width:500px;
+    font-weight: 700;
+    text-align: center;
+    margin:auto;
+    margin-bottom: 30px;
+}
+#msg{
+    text-align: center;
+    width:500px;
+    margin:auto;
+    margin-bottom: 30px;
+}
+.popout>div,.popout>div p{
+    width: 100%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.popout>p{
+    margin:0;
+    text-align: center;
+}
+.popout>p button{
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    color: #fff;
+    font-size: 18px;
+    background-color: #00cfbc;
+    font-family: '微软雅黑';
+    cursor: pointer;
+}

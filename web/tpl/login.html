@@ -21,6 +21,7 @@
 
     <link href="assets/css/animate.css" rel="stylesheet">
     <link href="assets/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="assets/css/popwindow.css" rel="stylesheet">
 
 
     <!-- Main css -->
@@ -32,12 +33,30 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
 </head>
 <body>
     {{if .Flag}}
-    <script type="text/javascript">
-        alert("密码错误！请重新输入！");
-    </script>
+    <div id="popout">
+        <div class="popout">
+            <div>
+                <p id="title">提示</p>
+                <p id="msg">用户名或密码输入错误!请重新输入!</p>
+            </div>
+            <p><button type="button" name="button">好的</button></p>
+        </div>
+    </div>
+    {{end}}
+    {{if not .Login}}
+    <div id="popout">
+        <div class="popout">
+            <div>
+                <p id="title">提示</p>
+                <p id="msg">请先登陆！</p>
+            </div>
+            <p><button type="button" name="button">好的</button></p>
+        </div>
+    </div>
     {{end}}
     <!-- Preloader -->
 	<div class="preloader">
@@ -114,7 +133,7 @@
                                     <div class="amount">
                                         <input type="password" placeholder="密码" name="password" autocomplete="off" required>
                                     </div>
-                                    <button type="submit" class="bttn-mid btn-fill w-100">登录</button>
+                                    <button type="submit" class="bttn-mid btn-fill w-100">立即登录</button>
                                 </form>
                             </div>
                         </div>
@@ -260,6 +279,7 @@
     <script src="assets/js/jquery.nice-select.min.js"></script>
 
     <script src="assets/js/script.js"></script>
+
 </body>
 
 
