@@ -130,46 +130,7 @@ func PutCet(stub shim.ChaincodeStubInterface, cet CertificateObj) ([]byte, bool)
 
 	return b, true
 }
-func GetEduInfo(stub shim.ChaincodeStubInterface, entityID string) (Education, bool)  {
-	var edu Education
-	b, err := stub.GetState(entityID)
-	if err != nil {
-		return edu, false
-	}
 
-	if b == nil {
-		return edu, false
-	}
-
-	err = json.Unmarshal(b, &edu)
-	if err != nil {
-		return edu, false
-	}
-
-	// 返回结果
-	return edu, true
-}
-func GetCetInfo(stub shim.ChaincodeStubInterface, entityID string, level string, test_time string) (CertificateObj, bool)  {
-	var cet CertificateObj
-	cet.EntityID = entityID
-	cet.Level = level
-	cet.TestTime = test_time
-	indexKey,_ := GetCetIndexKey(stub, &cet)
-	b, err := stub.GetState(indexKey)
-	if err != nil {
-		return cet, false
-	}
-
-	if b == nil {
-		return cet, false
-	}
-
-	err = json.Unmarshal(b, &cet)
-	if err != nil {
-		return cet, false
-	}
-	return cet, true
-}
 
 // 根据指定的查询字符串实现富查询
 func getDataByQueryString(stub shim.ChaincodeStubInterface, queryString string) ([]byte, error) {
@@ -220,11 +181,6 @@ func (t *EducationChaincode) addEdu(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error("反序列化信息时发生错误")
 	}
 
-	// 查重: 身份证号码必须唯一
-	_, exist := GetEduInfo(stub, edu.EntityID)
-	if exist {
-		return shim.Error("要添加的身份证号码已存在")
-	}
 	tm,_ := stub.GetTxTimestamp()
 	id := stub.GetTxID()
 	edu.TxID = id
@@ -252,10 +208,6 @@ func (t *EducationChaincode) addCet(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error("反序列化信息时发生错误")
 	}
 
-	_, exist := GetCetInfo(stub, cet.EntityID, cet.Level, cet.TestTime)
-	if exist {
-		return shim.Error("信息已存在")
-	}
 	tm,_ := stub.GetTxTimestamp()
 	id := stub.GetTxID()
 	cet.TxID = id
@@ -434,35 +386,10 @@ func (t *EducationChaincode) updateEdu(stub shim.ChaincodeStubInterface, args []
 		return  shim.Error("反序列化edu信息失败")
 	}
 
-	// 根据身份证号码查询信息
-	result, bl := GetEduInfo(stub, info.EntityID)
-	if !bl{
-		return shim.Error("根据身份证号码查询信息时发生错误")
-	}
-	
-	result.Name = info.Name
-	result.BirthDay = info.BirthDay 
-	result.Nation = info.Nation 
-	result.Gender = info.Gender 
-	result.Place = info.Place 
-	result.EntityID = info.EntityID
-	result.Photo = info.Photo 
-
-
-	result.EnrollDate = info.EnrollDate
-	result.GraduationDate = info.GraduationDate
-	result.SchoolName = info.SchoolName
-	result.Major = info.Major 
-	result.QuaType = info.QuaType 
-	result.Length = info.Length 
-	result.Mode = info.Mode 
-	result.Level = info.Level 
-	result.Graduation = info.Graduation
-	result.CertNo = info.CertNo
 	tm,_ := stub.GetTxTimestamp()
-	result.TimeStamp = time.Unix(tm.Seconds + 8 * 3600, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
-	result.TxID = stub.GetTxID()
-	_, bl = PutEdu(stub, result)
+	info.TimeStamp = time.Unix(tm.Seconds + 8 * 3600, int64(tm.Nanos)).Format("2006-01-02 15:04:05")
+	info.TxID = stub.GetTxID()
+	_, bl := PutEdu(stub, info)
 	if !bl {
 		return shim.Error("保存信息信息时发生错误")
 	}
@@ -481,13 +408,6 @@ func (t *EducationChaincode) delEdu(stub shim.ChaincodeStubInterface, args []str
 	if len(args) != 2{
 		return shim.Error("给定的参数个数不符合要求")
 	}
-
-	/*var edu Education
-	result, bl := GetEduInfo(stub, info.EntityID)
-	err := json.Unmarshal(result, &edu)
-	if err != nil {
-		return shim.Error("反序列化信息时发生错误")
-	}*/
 
 	err := stub.DelState(args[0])
 	if err != nil {

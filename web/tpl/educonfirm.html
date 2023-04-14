@@ -25,7 +25,6 @@
 
     <!-- Main css -->
     <link href="assets/css/main.css" rel="stylesheet">
-    <link href="assets/css/popwindow.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,40 +35,17 @@
     <style>
         .bttn-small {
             font-size: 15px;
+            padding: 4px 14px;
         }
-        select{
-            width: 100%;
-            height: 50px;
-            background: transparent;
-            border: 2px solid #E5E5E5;
-            text-indent: 10px;
-            margin-bottom: 30px;
+        .blog-area .blog-all-comments .blog-comments .author-comments .author-details h4 {
+            font-size: 24px;
+        }
+        .container{
+            max-width: 1600px;
         }
     </style>
 </head>
 <body>
-    {{if not .DataOk}}
-    <div id="popout">
-        <div class="popout">
-            <div>
-                <p id="title">提示</p>
-                <p id="msg">{{.Msg}}</p>
-            </div>
-            <p><button type="button" name="button">好的</button></p>
-        </div>
-    </div>
-    {{end}}
-    {{if .Flag}}
-    <div id="popout">
-        <div class="popout">
-            <div>
-                <p id="title">提示</p>
-                <p id="msg">{{.Msg}}</p>
-            </div>
-            <p><a href="/index"><button type="button" name="button">好的</button></a></p>
-        </div>
-    </div>
-    {{end}}
     <!-- Preloader -->
 	<div class="preloader">
 		<div class="spinner">
@@ -81,7 +57,7 @@
         <nav class="navbar navbar-expand-lg main-menu">
             <div class="container">
 
-                <a class="navbar-brand" href="/index" style="color: white; font-size: 18px;font-family: 'Open Sans', sans-serif"><img src="assets/images/logo.png" class="d-inline-block align-top" alt="">&nbsp;教育存证共享系统</a>
+                <a class="navbar-brand" href="index.html" style="color: white; font-size: 18px;font-family: 'Open Sans', sans-serif"><img src="assets/images/logo.png" class="d-inline-block align-top" alt="">&nbsp;教育存证共享系统</a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="menu-toggle"></span>
@@ -95,7 +71,7 @@
                               <li><a class="dropdown-item" href="/index">您的身份类别为{{.CurrentUser.Identity}}</a></li>
                               <li><a class="dropdown-item" href="/loginout">退出登录</a></li>
                           </ul>
-                        </li>
+                      </li>
                     </ul>
                 </div>
             </div>
@@ -113,69 +89,65 @@
                     </div>
                     <ul>
                         <li><a href="/index">Home</a></li>
-                            <li>AddCet</li>
+                            <li>EduComfirm</li>
                     </ul>
                 </div>
             </div>
         </div>
-    </section><!--/breadcrumb area-->
-    <!--Blog Area-->
-    <section class="blog-area section-padding-2">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"></div>
-                        <div class="blog-comment-form">
-                            <h3>添加四六级证书信息</h3>
-                            <form action="/addCet" method="post" name="addForm">
-                                <div class="row">
-                                    <div class="col-md-12" style="margin-bottom: 10px;">> 请按照输入框提示输入相关信息</div>
-                                    <div class="col-md-3">
-                                        <input type="text" placeholder="姓名" name="name" pattern="^[\u4e00-\u9fa5]+$" title="请输入中文" required />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select name="gender">
-                                            <option value="男">男</option>
-                                            <option value="女">女</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        {{if eq .CurrentUser.Identity "Individual"}}
-                                        <input type="text" placeholder="身份证号" name="entityID" value="{{.CurrentUser.IdentificationCode}}" readonly unselectable="on"/>
-                                        {{else}}
-                                        <input type="text" placeholder="身份证号" name="entityID" pattern="[0-9]{17}[0-9|X|x]" title="18位身份证号（全数字或结尾为X|x）" required />
-                                        {{end}}
-                                    </div>
- 
-                                    <div class="col-md-3">
-                                        <select name="level">
-                                            <option value="四">四级</option>
-                                            <option value="六">六级</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3" >
-                                        <input type="text" placeholder="考试时期（格式xxxx年xx月）" pattern="^20[0-9]{2}年[[0[1-9]]|[10|11|12]]月$" title="xxxx年xx月" name="testTime" required />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="text" placeholder="准考证号（15位准考证号）" name="testNo" pattern="[0-9]{15}" title="15位准考证号(全数字)" required/>
-                                    </div>
+    </section>
 
-                                    <div class="col-md-3">
-                                        <input type="number" placeholder="分数（0-710）" name="score" min="0" max="710" required/>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="text" placeholder="证书编号（15位证书编号）" name="certNo" pattern="[0-9]{15}" title="15位证书编号(全数字)" required/>
-                                    </div>
-                                    
-                                </div>
-                                <div class="col-md-12" style="text-align: center;">
-                                    <button type="submit" class="bttn-mid btn-fill">确认提交</button>
-                                </div>
-                            </form>
-                        </div>
+    <section class="section-padding partner-form section-padding gray-bg">
+        <div class="container" style="max-width: 2400px;">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 centered wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="section-title">
+                        <h2>学历证书待认证列表</h2>
+                        <p>The Education Certificate List That Waiting To Be Approved</p>
+                    </div>
+                </div>
+            </div>   
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="domain-list table-responsive">
+                        <table class="table centered">
+                            <thead>
+                              <tr>
+                                <th scope="col">序号</th>
+                                <th scope="col">证书类型</th>
+                                <th scope="col">申请编号</th>
+                                <th scope="col">申请时间</th>
+                                <th scope="col">查看</th>
+                                <th scope="col">状态</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {{range $index,$ptr := .EduWTBAList}}
+                              <tr>
+                                <th>{{$index}}</th>
+                                <th>{{$ptr.EduItem.Level}}级证书</th>
+                                <th class="cl-red">{{$ptr.Proposer.ProNo}}</th>
+                                <th>{{$ptr.Proposer.ProTime}}</th>
+                                {{if eq $ptr.Proposer.StatusCode 0}}
+                                <th class="cl-yellow">待认证</th>
+                                {{else if eq $ptr.Proposer.StatusCode 1}}
+                                <th class="cl-green">认证通过</th>
+                                {{else}}
+                                <th class="cl-grey">已撤销</th>
+                                {{end}}
+                                <td><a style="font-weight: 700;" href="#">查看详情</a></td>
+                                {{if eq $ptr.Proposer.StatusCode 0}}
+                                <td><a style="font-weight: 700;" href="/educonfirm?index={{$index}}">撤 销</a></td>
+                                {{end}}
+                              </tr>
+                            {{end}}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </section><!--/Blog Area-->
+    </section>
+
 
     <!--Footer Area-->
     <footer class="footer-area section-padding-2 gradient-bg">
@@ -254,4 +226,5 @@
 
     <script src="assets/js/script.js"></script>
 </body>
+
 </html>

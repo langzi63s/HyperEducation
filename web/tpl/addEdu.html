@@ -237,7 +237,11 @@
                                         <input type="text" placeholder="证书编号" name="certNo" pattern="[0-9]{18}" title="18位证书编号(全数字)" required />
                                     </div>
                                     <div class="col-md-4">
+                                        {{if eq .CurrentUser.Identity "Individual"}}
+                                        <input type="text" placeholder="身份证号" name="entityID" value="{{.CurrentUser.IdentificationCode}}" readonly unselectable="on"/>
+                                        {{else}}
                                         <input type="text" placeholder="身份证号" name="entityID" pattern="[0-9]{17}[0-9|X|x]" title="18位身份证号（全数字或结尾为X|x）" required />
+                                        {{end}}
                                     </div>
                                     
                                 </div>

@@ -6,6 +6,7 @@ import (
 	"education/service"
 	"fmt"
 	"time"
+	"strconv"
 )
 
 var data = &struct {
@@ -16,8 +17,13 @@ var data = &struct {
 	CurPicHashCode string
 	Msg string
 	DataOk bool
+	CetListEmpty bool
+	EduListEmpty bool
+	PersonalSpace PersonalSpace
 	Cets []service.CetHistoryItem
 	CurCet service.CertificateObj
+	CetWTBAList []*CetWaitingToApproveStruct
+	EduWTBAList []*EduWaitingToApproveStruct
 }{
 	CurrentUser:User{},
 	Flag:false,
@@ -26,6 +32,8 @@ var data = &struct {
 	CurPicHashCode:"",
 	Msg:"",
 	DataOk:true,
+	CetListEmpty:true,
+	EduListEmpty:true,
 }
 func dataReset(){
 	data.Flag = false
@@ -35,6 +43,17 @@ func dataReset(){
 	data.Msg = ""
 	data.DataOk = true
 	data.Login = true
+	data.CetListEmpty=true
+	data.EduListEmpty=true
+	if(len(data.CetWTBAList)>0){
+		CList := []*CetWaitingToApproveStruct{}
+		data.CetWTBAList = CList
+	}
+	
+	if(len(data.EduWTBAList)>0){
+		EList := []*EduWaitingToApproveStruct{}
+		data.EduWTBAList = EList
+	}
 }
 func userCheck(w http.ResponseWriter, r *http.Request){
 	if data.CurrentUser == (User{}){
@@ -50,8 +69,29 @@ func (app *Application) LoginView(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) AdminLoginView(w http.ResponseWriter, r *http.Request)  {
 	ShowView(w, r, "login-2.html", data)
 }
-func (app *Application) Index(w http.ResponseWriter, r *http.Request)  {
-	userCheck()
+func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
+	userCheck(w,r)
+	defer dataReset()
+	obj := r.FormValue("obj")
+	indexStr := r.FormValue("index")
+	index,_ := strconv.Atoi(indexStr) 
+	data.PersonalSpace = PersonalSpaceMap[data.CurrentUser.LoginName]
+	if(len(data.PersonalSpace.CetPtrList) > 0){
+		data.CetListEmpty = false
+	}
+	if(len(data.PersonalSpace.EduPtrList) > 0){
+		data.EduListEmpty = false
+	}
+	if data.CetListEmpty && data.EduListEmpty{
+		data.Flag = true
+	}
+	if(obj == "edu"){
+		data.PersonalSpace.EduPtrList[index].UpdateStatusCode(-1)
+	}else if(obj == "cet"){
+		msg,_ := data.PersonalSpace.CetPtrList[index].UpdateStatusCode(-1)
+		fmt.Println(msg)
+		fmt.Println(*data.PersonalSpace.CetPtrList[index])
+	}
 	ShowView(w, r, "index.html", data)
 }
 func (app *Application) Help(w http.ResponseWriter, r *http.Request)  {
@@ -66,7 +106,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	for _, user := range users {
 		if user.LoginName == loginName && user.Password == password {
 			data.CurrentUser = user
-			ShowView(w, r, "index.html", data)
+			app.Index(w,r)
 			return
 		}
 	}
@@ -93,7 +133,7 @@ func (app *Application) Login_2(w http.ResponseWriter, r *http.Request) {
 func (app *Application) LoginOut(w http.ResponseWriter, r *http.Request)  {
 	defer dataReset()
 	data.CurrentUser = User{}
-	ShowView(w, r, "login.html", nil)
+	ShowView(w, r, "login.html", data)
 }
 
 // 显示添加信息页面
@@ -139,6 +179,7 @@ func (app *Application) AddEdu(w http.ResponseWriter, r *http.Request) {
 		data.DataOk = false
 		data.Msg = "身份证号已存在，请重新填写！"
 		ShowView(w, r, "addEdu.html", data)
+		return
 	}
 	//检查证书编号
 	result,_ = app.Setup.FindEduByCertNoAndName(edu.CertNo,edu.Name)
@@ -149,18 +190,21 @@ func (app *Application) AddEdu(w http.ResponseWriter, r *http.Request) {
 		data.DataOk = false
 		data.Msg = "证书编号已存在，请重新填写！"
 		ShowView(w, r, "addEdu.html", data)
+		return
 	}
 	//提交到待认证列表
 	tStr := time.Now().Format("2006-01-02 15:04:05")
+	proNo := service.Sha256(data.CurrentUser.LoginName+tStr)
 	EduWaitingToApproveObj :=EduWaitingToApproveStruct{
-		proposer:Proposer {
-			Userinfo:data.CurrentUser,
+		Proposer:ProposerStruct {
+			LoginName:data.CurrentUser.LoginName,
 			ProTime:tStr,
+			ProNo:proNo[0:10],
+			StatusCode:0,
 		},
-		eduItem:edu,
+		EduItem:edu,
 	}
-
-	EduWaitingToApproveList = append(EduWaitingToApproveList,EduWaitingToApproveObj)
+	AddEduProposal(EduWaitingToApproveObj)
 	data.Flag = true
 	data.Msg = "添加成功！敬请等待认证"
 	ShowView(w, r, "addEdu.html", data)
@@ -192,6 +236,7 @@ func (app *Application) AddCet(w http.ResponseWriter, r *http.Request) {
 		data.DataOk = false
 		data.Msg = "证书编号已存在，请重新填写！"
 		ShowView(w, r, "addCet.html", data)
+		return
 	}
 	result,_ = app.Setup.FindCetByCertNoOrTestNo(cet.TestNo,"2")
 	savedCet = service.CertificateObj{}
@@ -201,17 +246,21 @@ func (app *Application) AddCet(w http.ResponseWriter, r *http.Request) {
 		data.DataOk = false
 		data.Msg = "准考证号已存在，请重新填写！"
 		ShowView(w, r, "addCet.html", data)
+		return
 	}
 	//提交到待认证列表
 	tStr := time.Now().Format("2006-01-02 15:04:05")
+	proNo := service.Sha256(data.CurrentUser.LoginName+tStr)
 	CetWaitingToApproveObj :=CetWaitingToApproveStruct{
-		proposer:Proposer{
-			Userinfo:data.CurrentUser,
+		Proposer:ProposerStruct{
+			LoginName:data.CurrentUser.LoginName,
 			ProTime:tStr,
+			ProNo:proNo[0:10],
+			StatusCode:0,
 		},
-		cetItem:cet,
+		CetItem:cet,
 	}
-	CetWaitingToApproveList = append(CetWaitingToApproveList,CetWaitingToApproveObj)
+	AddCetProposal(CetWaitingToApproveObj)
 	data.Msg = "添加成功！敬请等待认证"
 	data.Flag = true
 	ShowView(w, r, "addCet.html", data)
@@ -332,6 +381,36 @@ func (app *Application) HistoryShow(w http.ResponseWriter, r *http.Request)  {
 	data.Edu = edu
 	ShowView(w, r, "history.html", data)
 }
+
+func (app *Application) CetConfirmShow(w http.ResponseWriter, r *http.Request){
+	userCheck(w,r)
+	defer dataReset()
+	indexStr := r.FormValue("index")
+	if indexStr != ""{
+		index,_ := strconv.Atoi(indexStr)
+		if(index >= 0){
+			CetWaitingToApproveList[index].UpdateStatusCode(-1)
+		}
+	}
+	for i := 0;i < len(CetWaitingToApproveList);i++{
+		data.CetWTBAList = append(data.CetWTBAList,&CetWaitingToApproveList[i])
+	}
+	ShowView(w, r, "cetconfirm.html", data)
+}
+func (app *Application) EduConfirmShow(w http.ResponseWriter, r *http.Request){
+	userCheck(w,r)
+	defer dataReset()
+	indexStr := r.FormValue("index")
+	index,_ := strconv.Atoi(indexStr)
+	for i := 0;i < len(EduWaitingToApproveList);i++{
+		data.EduWTBAList = append(data.EduWTBAList,&EduWaitingToApproveList[i])
+	}
+	if(index >= 0){
+		EduWaitingToApproveList[index].UpdateStatusCode(-1)
+	}
+	ShowView(w, r, "educonfirm.html", data)
+}
+
 // 修改/添加新信息
 func (app *Application) ModifyShow(w http.ResponseWriter, r *http.Request)  {
 	userCheck(w,r)
