@@ -25,6 +25,7 @@ type ProposerStruct struct {
 	ProTime string
 	ProNo string 
 	StatusCode int 
+	ConfirmLoginName string
 }
 
 type CetWaitingToApproveStruct struct{

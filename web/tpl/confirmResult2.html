@@ -25,6 +25,7 @@
 
     <!-- Main css -->
     <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/popwindow.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -72,7 +73,7 @@
                 <p id="title">提示</p>
                 <p id="msg">{{.Msg}}</p>
             </div>
-            <p><a href="/index"><button type="button" name="button">好的</button></a></p>
+            <p><a href="/cetconfirm"><button type="button" name="button">好的</button></a></p>
         </div>
     </div>
     {{end}}
@@ -89,13 +90,6 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">在线验证学历</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/queryPage">根据证书编号查询</a></li>
-                                <li><a class="dropdown-item" href="/queryPage2">根据身份证号查询</a></li>
-                            </ul>
-                        </li>
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">欢迎登录，{{.CurrentUser.LoginName}}</a>
                           <ul class="dropdown-menu">
@@ -120,7 +114,7 @@
                     </div>
                     <ul>
                         <li><a href="/index">Home</a></li>
-                            <li>QueryResult</li>
+                            <li>CetConfirm</li>
                     </ul>
                 </div>
             </div>
@@ -134,97 +128,55 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <div class="blog-all-comments" >
-                        <h3>查询结果如下</h3>
-                        <div class="blog-comments"style="padding-bottom: 10px;">
-                            <div class="author-thumb" style="width: 240px;">
-                                <img src="{{.Edu.Photo}}" alt="" style="width: 210px;height: 280px;border-radius: 0%"/>
-                            </div>
-                            <div class="author-comments">
-                                <div class="author-details">                                
-                                    <h4>{{.Edu.Name}}</h4>
-
-                                    <div class="comment-reply-btn">
-                                        <a href="/history?entityID={{.Edu.EntityID}}" class="bttn-small btn-fill"><i class="fa fa-share"></i>查看历史</a>
-                                    </div>
-                                </div>
-                                <div class="author-designation">
-                                    {{.Edu.EntityID}} 
-                                </div>
-                                    <p style="margin-bottom:10px;">
-                                        出生日期：{{.Edu.BirthDay}}
-                                        <br>籍贯：{{.Edu.Place}}
-                                        <br>性别：{{.Edu.Gender}}
-                                        <br>民族：{{.Edu.Nation}}
-                                        
-                                    </p>
-                                    <p>
-                                        最近交易编号：{{.Edu.TxID}}
-                                        <br>链上图片哈希：{{.Edu.PhotoHashCode}}
-                                        <br>左侧图片哈希：{{.CurPicHashCode}}
-                                    </p>
-                                    <div class="author-designation" >
-
-                                        <div style="float:right">
-                                        最近更新时间：{{.Edu.TimeStamp}}
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                        
+                        <h3>待添加证书信息如下</h3>
                     </div>
                     <div class="blog-all-comments mb-60">
                         <div class="blog-comments">
                             <div class="author-comments">
                                 <div class="author-details" style="margin-bottom: 20px;">                                
-                                    <h4>学历详情</h4>
+                                    <h4>四六级证书详情</h4>
                                     {{if eq .CurrentUser.Identity "Member"}}
                                     <div class="comment-reply-btn">
-                                        <a href="/modifyPage?certNo={{.Edu.CertNo}}&name={{.Edu.Name}}" class="bttn-small btn-fill"><i class="flaticon-moon"></i>修改数据</a>
+                                        <a href="/cetAuthentication?index={{.Index}}" class="bttn-small btn-fill"><i class="flaticon-moon"></i>确认添加</a>
                                     </div>
                                     {{end}}
+
                                 </div>
                                     <div style="width:50%;float: left;">
                                         <p>
-                                            <span>学校名称：</span>
-                                            <span>{{.Edu.SchoolName}}</span>
+                                            <span>姓名：</span>
+                                            <span>{{.CurCet.Name}}</span>
                                         </p>
                                         <p>
-                                            <span>入学日期：</span>
-                                            <span>{{.Edu.EnrollDate}}</span>
+                                            <span>性别：</span>
+                                            <span>{{.CurCet.Gender}}</span>
                                         </p>
                                         <p>
-                                            <span>学历类别：</span>
-                                            <span>{{.Edu.QuaType}}</span>
+                                            <span>身份证号：</span>
+                                            <span>{{.CurCet.EntityID}}</span>
                                         </p>
                                         <p>
-                                            <span>层次：</span>
-                                            <span>{{.Edu.Level}}</span>
+                                            <span>准考证号：</span>
+                                            <span>{{.CurCet.TestNo}}</span>
                                         </p>
-                                        <p>
-                                            <span>毕(结)业：</span>
-                                            <span>{{.Edu.Graduation}}</span>
-                                        </p>
+
                                     </div>
                                     <div>
                                         <p>
-                                            <span>专业：</span>
-                                            <span>{{.Edu.Major}}</span>
+                                            <span>等级：</span>
+                                            <span>{{.CurCet.Level}}</span>
                                         </p>
                                         <p>
-                                            <span>毕(结)业日期：</span>
-                                            <span>{{.Edu.GraduationDate}}</span>
-                                        </p>
-                                        <p>
-                                            <span>学习形式：</span>
-                                            <span>{{.Edu.Mode}}</span>
-                                        </p>
-                                        <p>
-                                            <span>学制：</span>
-                                            <span>{{.Edu.Length}}</span>
+                                            <span>考试时间：</span>
+                                            <span>{{.CurCet.TestTime}}</span>
                                         </p>
                                         <p>
                                             <span>证书编号：</span>
-                                            <span>{{.Edu.CertNo}}</span>
+                                            <span>{{.CurCet.CertNo}}</span>
+                                        </p>
+                                        <p>
+                                            <span>分数：</span>
+                                            <span>{{.CurCet.Score}}</span>
                                         </p>
                                     </div>
                                 </div> 

@@ -19,6 +19,7 @@ var data = &struct {
 	DataOk bool
 	CetListEmpty bool
 	EduListEmpty bool
+	Index int
 	PersonalSpace PersonalSpace
 	Cets []service.CetHistoryItem
 	CurCet service.CertificateObj
@@ -37,23 +38,14 @@ var data = &struct {
 }
 func dataReset(){
 	data.Flag = false
-	data.Edu = service.Education{}
-	data.CurCet = service.CertificateObj{}
+	//data.Edu = service.Education{}
+	//data.CurCet = service.CertificateObj{}
 	data.CurPicHashCode = ""
 	data.Msg = ""
 	data.DataOk = true
 	data.Login = true
 	data.CetListEmpty=true
 	data.EduListEmpty=true
-	if(len(data.CetWTBAList)>0){
-		CList := []*CetWaitingToApproveStruct{}
-		data.CetWTBAList = CList
-	}
-	
-	if(len(data.EduWTBAList)>0){
-		EList := []*EduWaitingToApproveStruct{}
-		data.EduWTBAList = EList
-	}
 }
 func userCheck(w http.ResponseWriter, r *http.Request){
 	if data.CurrentUser == (User{}){
@@ -208,11 +200,6 @@ func (app *Application) AddEdu(w http.ResponseWriter, r *http.Request) {
 	data.Flag = true
 	data.Msg = "添加成功！敬请等待认证"
 	ShowView(w, r, "addEdu.html", data)
-	/*
-	r.Form.Set("certNo", edu.CertNo)
-	r.Form.Set("name", edu.Name)
-	app.FindCertByNoAndName(w, r)
-	*/
 }
 func (app *Application) AddCet(w http.ResponseWriter, r *http.Request) {
 	userCheck(w,r)
@@ -386,14 +373,24 @@ func (app *Application) CetConfirmShow(w http.ResponseWriter, r *http.Request){
 	userCheck(w,r)
 	defer dataReset()
 	indexStr := r.FormValue("index")
+	event := r.FormValue("event")
+	var index int
 	if indexStr != ""{
-		index,_ := strconv.Atoi(indexStr)
-		if(index >= 0){
-			CetWaitingToApproveList[index].UpdateStatusCode(-1)
-		}
+		index,_ = strconv.Atoi(indexStr)
 	}
-	for i := 0;i < len(CetWaitingToApproveList);i++{
-		data.CetWTBAList = append(data.CetWTBAList,&CetWaitingToApproveList[i])
+	if event == "withdraw"{
+		CetWaitingToApproveList[index].UpdateStatusCode(-1)
+	}else if event == "detail"{
+		data.CurCet = CetWaitingToApproveList[index].CetItem
+		data.Index = index
+		ShowView(w, r, "confirmResult2.html", data)
+		return
+	}else{
+		if(len(data.CetWTBAList) < len(CetWaitingToApproveList)){
+			for i := len(data.CetWTBAList);i < len(CetWaitingToApproveList);i++{
+				data.CetWTBAList = append(data.CetWTBAList,&CetWaitingToApproveList[i])
+			}
+		}
 	}
 	ShowView(w, r, "cetconfirm.html", data)
 }
@@ -401,16 +398,58 @@ func (app *Application) EduConfirmShow(w http.ResponseWriter, r *http.Request){
 	userCheck(w,r)
 	defer dataReset()
 	indexStr := r.FormValue("index")
-	index,_ := strconv.Atoi(indexStr)
-	for i := 0;i < len(EduWaitingToApproveList);i++{
-		data.EduWTBAList = append(data.EduWTBAList,&EduWaitingToApproveList[i])
+	event := r.FormValue("event")
+	var index int
+	if indexStr != ""{
+		index,_ = strconv.Atoi(indexStr)
 	}
-	if(index >= 0){
+	if event == "withdraw"{
 		EduWaitingToApproveList[index].UpdateStatusCode(-1)
+	}else if event == "detail"{
+		data.Edu = EduWaitingToApproveList[index].EduItem
+		data.Index = index
+		ShowView(w, r, "confirmResult.html", data)
+	}else{
+		if(len(data.EduWTBAList) < len(EduWaitingToApproveList)){
+			for i := len(data.EduWTBAList);i < len(EduWaitingToApproveList);i++{
+				data.EduWTBAList = append(data.EduWTBAList,&EduWaitingToApproveList[i])
+			}
+		}
 	}
 	ShowView(w, r, "educonfirm.html", data)
 }
-
+func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
+	defer dataReset()
+	indexStr := r.FormValue("index")
+	index,_ := strconv.Atoi(indexStr)
+	txId,err := app.Setup.SaveEdu(EduWaitingToApproveList[index].EduItem)
+	if err != nil{
+		data.Flag = true
+		data.Msg = "添加时发生错误！"
+		ShowView(w, r, "educonfirm.html", data)
+	}
+	data.Flag = true
+	data.Msg = "交易成功！交易编号：" + txId
+	EduWaitingToApproveList[index].UpdateStatusCode(1)
+	EduWaitingToApproveList[index].Proposer.ConfirmLoginName = data.CurrentUser.LoginName
+	ShowView(w, r, "confirmResult.html", data)
+}
+func (app *Application) CetConfirm(w http.ResponseWriter, r *http.Request){
+	defer dataReset()
+	indexStr := r.FormValue("index")
+	index,_ := strconv.Atoi(indexStr)
+	txId,err := app.Setup.SaveCet(CetWaitingToApproveList[index].CetItem)
+	if err != nil{
+		data.Flag = true
+		data.Msg = "添加时发生错误！"
+		ShowView(w, r, "cetconfirm.html", data)
+	}
+	data.Flag = true
+	data.Msg = "交易成功！交易编号：" + txId
+	CetWaitingToApproveList[index].UpdateStatusCode(1)
+	CetWaitingToApproveList[index].Proposer.ConfirmLoginName = data.CurrentUser.LoginName
+	ShowView(w, r, "confirmResult2.html", data)
+}
 // 修改/添加新信息
 func (app *Application) ModifyShow(w http.ResponseWriter, r *http.Request)  {
 	userCheck(w,r)

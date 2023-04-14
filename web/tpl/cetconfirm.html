@@ -97,7 +97,7 @@
     </section>
 
     <section class="section-padding partner-form section-padding gray-bg">
-        <div class="container" style="max-width: 2400px;">
+        <div class="container" style="max-width: 1600px;">
             <div class="row justify-content-center">
                 <div class="col-xl-6 centered wow fadeInUp" data-wow-delay="0.3s">
                     <div class="section-title">
@@ -120,6 +120,7 @@
                                 <th scope="col">查看</th>
                                 <th scope="col">状态</th>
                                 <th scope="col">操作</th>
+                                
                               </tr>
                             </thead>
                             <tbody>
@@ -137,9 +138,15 @@
                                 {{else}}
                                 <th class="cl-grey">已撤销</th>
                                 {{end}}
-                                <td><a style="font-weight: 700;" href="#">查看详情</a></td>
                                 {{if eq $ptr.Proposer.StatusCode 0}}
-                                <td><a style="font-weight: 700;" href="/cetconfirm?index={{$index}}">撤 销</a></td>
+                                <td><a style="font-weight: 700;" href="/cetconfirm?event=detail&index={{$index}}">查看详情</a></td>
+                                {{else}}
+                                <td>已无法查看详情</td>
+                                {{end}}
+                                {{if eq $ptr.Proposer.StatusCode 0}}
+                                <td><a style="font-weight: 700;" href="/cetconfirm?event=withdraw&index={{$index}}">撤 销</a></td>
+                                {{else if eq $ptr.Proposer.StatusCode 1}}
+                                <td>认证人：{{$ptr.Proposer.ConfirmLoginName}}</td>
                                 {{end}}
                               </tr>
                             {{end}}
