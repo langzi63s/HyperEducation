@@ -3,6 +3,9 @@ package controller
 
 import (
 	"education/service"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 )
 
 type Application struct {
@@ -10,10 +13,10 @@ type Application struct {
 }
 var PersonalSpaceMap map[string]PersonalSpace //string:LoginName
 type User struct {
-	LoginName	string
-	Password	string
-	Identity 	string
-	IdentificationCode	string
+	LoginName	string `db:"LoginName"`
+	Password	string `db:"Password"` 
+	Identity 	string `db:"Identity"`
+	IdentificationCode	string `db:"IdentificationCode"`
 }
 type PersonalSpace struct{
 	CetPtrList []*CetWaitingToApproveStruct
@@ -36,9 +39,15 @@ type EduWaitingToApproveStruct struct{
 	Proposer ProposerStruct
 	EduItem service.Education
 }
-var users []User
-var CetWaitingToApproveList []CetWaitingToApproveStruct
-var EduWaitingToApproveList []EduWaitingToApproveStruct
+var user User
+var (
+	CetWaitingToApproveList []CetWaitingToApproveStruct
+	EduWaitingToApproveList []EduWaitingToApproveStruct
+)
+var (
+	dbConn *sql.DB
+	err error
+)
 const(
 	Admin = "Admin"
 	Member = "Member"
@@ -47,8 +56,10 @@ const(
 )
 func init() {
 	PersonalSpaceMapInit()
-	UsersInit()
+	//UsersInit()
+	MySqlInit()
 }
+/*
 func UsersInit(){
 	admin := User{LoginName:"admin", Password:"123456", Identity:Admin}
 	school := User{LoginName:"school", Password:"123456",Identity:Member}
@@ -60,6 +71,7 @@ func UsersInit(){
 	users = append(users, bob)
 	users = append(users, huawei)
 }
+*/
 func PersonalSpaceMapInit(){
 	PersonalSpaceMap = make(map[string]PersonalSpace)
 	for i := 0; i < len(CetWaitingToApproveList); i++{
@@ -106,4 +118,36 @@ func (e *EduWaitingToApproveStruct) UpdateStatusCode(statusCode int) (string, bo
 	}
 	e.Proposer.StatusCode = statusCode
 	return "更新成功",true
+}
+
+/* 数据库操作 */
+func MySqlInit(){
+	dbConn, err = sql.Open("mysql", "root:123qwe321ewq@tcp(localhost:3306)/education?allowNativePasswords=true")
+	dbConn.Ping()
+	if err != nil{
+		fmt.Println("数据库连接失败")
+		return
+	}
+}
+func MySqlLoginCheck(loginName string,password string) bool{
+	query := "select * from Users where LoginName="+"\""+loginName+"\""
+	fmt.Println(query)
+	rows, err := dbConn.Query(query)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer func(){
+		if rows != nil{
+			rows.Close()
+		}
+	}()
+	for rows.Next(){
+		rows.Scan(&user.LoginName,&user.Password,&user.Identity,&user.IdentificationCode)
+	}
+	if user.Password == password{
+		return true
+	}else{
+		return false
+	}
 }

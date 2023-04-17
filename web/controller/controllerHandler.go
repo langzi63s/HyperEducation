@@ -95,12 +95,10 @@ func (app *Application) Help(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	loginName := r.FormValue("loginName")
 	password := r.FormValue("password")
-	for _, user := range users {
-		if user.LoginName == loginName && user.Password == password {
-			data.CurrentUser = user
-			app.Index(w,r)
-			return
-		}
+	if MySqlLoginCheck(loginName,password){
+		data.CurrentUser = user
+		app.Index(w,r)
+		return
 	}
 	defer dataReset()
 	data.Flag = true
@@ -109,12 +107,10 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 func (app *Application) Login_2(w http.ResponseWriter, r *http.Request) {
 	loginName := r.FormValue("loginName")
 	password := r.FormValue("password")
-	for _, user := range users {
-		if user.LoginName == loginName && user.Password == password {
-			data.CurrentUser = user
-			ShowView(w, r, "index.html", data)
-			return
-		}
+	if MySqlLoginCheck(loginName,password){
+		data.CurrentUser = user
+		app.Index(w,r)
+		return
 	}
 	defer dataReset()
 	data.Flag = true
@@ -262,9 +258,6 @@ func (app *Application) QueryPage(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) FindCertByNoAndName(w http.ResponseWriter, r *http.Request)  {
 	userCheck(w,r)
 	defer dataReset()
-	if r.Method == "GET" {
-		ShowView(w, r, "query.html", data)
-	}
 	certNo := r.FormValue("certNo")
 	name := r.FormValue("name")
 	result,_ := app.Setup.FindEduByCertNoAndName(certNo, name)
@@ -291,9 +284,6 @@ func (app *Application) QueryPage2(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) FindByID(w http.ResponseWriter, r *http.Request)  {
 	userCheck(w,r)
 	defer dataReset()
-	if r.Method == "GET" {
-		ShowView(w, r, "query2.html", data)
-	}
 	entityID := r.FormValue("entityID")
 	result,_ := app.Setup.FindEduInfoByEntityID(entityID)
 	var edu = service.Education{}
@@ -318,9 +308,6 @@ func (app *Application) QueryPage3(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) FindCetByID(w http.ResponseWriter, r *http.Request)  {
 	userCheck(w,r)
 	defer dataReset()
-	if r.Method == "GET" {
-		ShowView(w, r, "query3.html", data)
-	}
 	entityID := r.FormValue("entityID")
 	result,_ := app.Setup.FindCetInfoByEntityID(entityID)
 	var Certificates []service.CetHistoryItem
@@ -338,9 +325,6 @@ func (app *Application) FindCetByID(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) FindCetByCertNoOrTestNoShow(w http.ResponseWriter, r *http.Request)  {
 	userCheck(w,r)
 	defer dataReset()
-	if r.Method == "GET" {
-		ShowView(w, r, "query4.html", data)
-	}
 	cetNo := r.FormValue("cetNo")
 	No := r.FormValue("No")
 	result,_ := app.Setup.FindCetByCertNoOrTestNo (cetNo,No)

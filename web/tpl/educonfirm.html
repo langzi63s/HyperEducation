@@ -117,8 +117,8 @@
                                 <th scope="col">申请人用户名</th>
                                 <th scope="col">申请编号</th>
                                 <th scope="col">申请时间</th>
-                                <th scope="col">查看</th>
                                 <th scope="col">状态</th>
+                                <th scope="col">查看</th>
                                 <th scope="col">操作</th>
                               </tr>
                             </thead>
@@ -127,15 +127,15 @@
                               <tr>
                                 <th>{{$index}}</th>
                                 <th>{{$ptr.EduItem.Level}}学历证书</th>
-                                <th>{{$ptr.Proposer.LoginName}}</th>
-                                <th class="cl-red">{{$ptr.Proposer.ProNo}}</th>
-                                <th>{{$ptr.Proposer.ProTime}}</th>
+                                <td>{{$ptr.Proposer.LoginName}}</td>
+                                <td class="cl-red">{{$ptr.Proposer.ProNo}}</td>
+                                <td>{{$ptr.Proposer.ProTime}}</td>
                                 {{if eq $ptr.Proposer.StatusCode 0}}
-                                <th class="cl-yellow">待认证</th>
+                                <td class="cl-yellow">待认证</td>
                                 {{else if eq $ptr.Proposer.StatusCode 1}}
-                                <th class="cl-green">认证通过</th>
+                                <td class="cl-green">认证通过</td>
                                 {{else}}
-                                <th class="cl-grey">已撤销</th>
+                                <td class="cl-grey">已撤销</td>
                                 {{end}}
                                 {{if eq $ptr.Proposer.StatusCode 0}}
                                 <td><a style="font-weight: 700;" href="/educonfirm?event=detail&index={{$index}}">查看详情</a></td>
