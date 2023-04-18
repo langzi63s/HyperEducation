@@ -78,9 +78,9 @@ func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 		data.Flag = true
 	}
 	if(obj == "edu"){
-		data.PersonalSpace.EduPtrList[index].UpdateStatusCode(-1)
+		data.PersonalSpace.EduPtrList[index].UpdateStatusCode(-1,"")
 	}else if(obj == "cet"){
-		msg,_ := data.PersonalSpace.CetPtrList[index].UpdateStatusCode(-1)
+		msg,_ := data.PersonalSpace.CetPtrList[index].UpdateStatusCode(-1,"")
 		fmt.Println(msg)
 		fmt.Println(*data.PersonalSpace.CetPtrList[index])
 	}
@@ -363,7 +363,7 @@ func (app *Application) CetConfirmShow(w http.ResponseWriter, r *http.Request){
 		index,_ = strconv.Atoi(indexStr)
 	}
 	if event == "withdraw"{
-		CetWaitingToApproveList[index].UpdateStatusCode(-1)
+		CetWaitingToApproveList[index].UpdateStatusCode(-1,"")
 	}else if event == "detail"{
 		data.CurCet = CetWaitingToApproveList[index].CetItem
 		data.Index = index
@@ -388,7 +388,7 @@ func (app *Application) EduConfirmShow(w http.ResponseWriter, r *http.Request){
 		index,_ = strconv.Atoi(indexStr)
 	}
 	if event == "withdraw"{
-		EduWaitingToApproveList[index].UpdateStatusCode(-1)
+		EduWaitingToApproveList[index].UpdateStatusCode(-1,"")
 	}else if event == "detail"{
 		data.Edu = EduWaitingToApproveList[index].EduItem
 		data.Index = index
@@ -414,7 +414,7 @@ func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
 	}
 	data.Flag = true
 	data.Msg = "交易成功！交易编号：" + txId
-	EduWaitingToApproveList[index].UpdateStatusCode(1)
+	EduWaitingToApproveList[index].UpdateStatusCode(1,data.CurrentUser.LoginName)
 	EduWaitingToApproveList[index].Proposer.ConfirmLoginName = data.CurrentUser.LoginName
 	ShowView(w, r, "confirmResult.html", data)
 }
@@ -430,7 +430,7 @@ func (app *Application) CetConfirm(w http.ResponseWriter, r *http.Request){
 	}
 	data.Flag = true
 	data.Msg = "交易成功！交易编号：" + txId
-	CetWaitingToApproveList[index].UpdateStatusCode(1)
+	CetWaitingToApproveList[index].UpdateStatusCode(1,data.CurrentUser.LoginName)
 	CetWaitingToApproveList[index].Proposer.ConfirmLoginName = data.CurrentUser.LoginName
 	ShowView(w, r, "confirmResult2.html", data)
 }

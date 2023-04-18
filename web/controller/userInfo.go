@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"fmt"
+	"encoding/json"
 )
 
 type Application struct {
@@ -88,34 +89,38 @@ func PersonalSpaceMapInit(){
 	}
 }
 func AddCetProposal(cet CetWaitingToApproveStruct){
+	MySqlInsertCetProposal(&cet)
 	CetWaitingToApproveList = append(CetWaitingToApproveList,cet)
 	Ps := PersonalSpaceMap[cet.Proposer.LoginName]
 	Ps.CetPtrList = append(Ps.CetPtrList,&CetWaitingToApproveList[len(CetWaitingToApproveList)-1])
 	PersonalSpaceMap[cet.Proposer.LoginName] = Ps
 }
 func AddEduProposal(edu EduWaitingToApproveStruct){
+	MySqlInsertEduProposal(&edu)
 	EduWaitingToApproveList = append(EduWaitingToApproveList,edu)
 	Ps := PersonalSpaceMap[edu.Proposer.LoginName]
 	Ps.EduPtrList = append(Ps.EduPtrList,&EduWaitingToApproveList[len(EduWaitingToApproveList)-1])
 	PersonalSpaceMap[edu.Proposer.LoginName] = Ps
 }
-func (c *CetWaitingToApproveStruct) UpdateStatusCode(statusCode int) (string, bool){
+func (c *CetWaitingToApproveStruct) UpdateStatusCode(statusCode int,Cname string) (string, bool){
 	if statusCode != 0 && statusCode != -1 && statusCode != 1{
 		return "传入参数有误,函数执行失败",false
 	}
 	if c.Proposer.StatusCode == statusCode{
 		return "状态一致无需改变",true
 	}
+	MySqlUpdateCetProposal(statusCode,Cname,c.Proposer.ProNo)
 	c.Proposer.StatusCode = statusCode
 	return "更新成功",true
 }
-func (e *EduWaitingToApproveStruct) UpdateStatusCode(statusCode int) (string, bool){
+func (e *EduWaitingToApproveStruct) UpdateStatusCode(statusCode int,Cname string) (string, bool){
 	if statusCode != 0 && statusCode != -1 && statusCode != 1{
 		return "传入参数有误,函数执行失败",false
 	}
 	if e.Proposer.StatusCode == statusCode{
 		return "状态一致无需改变",true
 	}
+	MySqlUpdateEduProposal(statusCode,Cname,e.Proposer.ProNo)
 	e.Proposer.StatusCode = statusCode
 	return "更新成功",true
 }
@@ -131,7 +136,6 @@ func MySqlInit(){
 }
 func MySqlLoginCheck(loginName string,password string) bool{
 	query := "select * from Users where LoginName="+"\""+loginName+"\""
-	fmt.Println(query)
 	rows, err := dbConn.Query(query)
 	if err != nil {
 		fmt.Println(err)
@@ -150,4 +154,150 @@ func MySqlLoginCheck(loginName string,password string) bool{
 	}else{
 		return false
 	}
+}
+
+func MySqlInsertEduProposal(edu *EduWaitingToApproveStruct){
+	stm, err := dbConn.Prepare("insert into EduProposals values(?,?,?,?,?,default)")
+	defer func(){
+		if stm != nil{
+			stm.Close()
+		}
+	}()
+	if err != nil{
+		fmt.Println("预处理失败")
+		return
+	}
+	b, err := json.Marshal(edu.EduItem)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	res, err := stm.Exec(edu.Proposer.ProNo,edu.Proposer.LoginName,
+						edu.Proposer.ProTime,edu.Proposer.StatusCode,b)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("sql执行失败")
+		return
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		fmt.Println("结果获取失败")
+		return
+	}				
+	if count > 0{
+		fmt.Println("新增成功")
+	}else{
+		fmt.Println("新增失败")
+	}	
+}
+func MySqlInsertCetProposal(cet *CetWaitingToApproveStruct){
+	stm, err := dbConn.Prepare("insert into CetProposals values(?,?,?,?,?,default)")
+	defer func(){
+		if stm != nil{
+			stm.Close()
+		}
+	}()
+	if err != nil{
+		fmt.Println("预处理失败")
+		return
+	}
+	b, err := json.Marshal(cet.CetItem)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	res, err := stm.Exec(cet.Proposer.ProNo,cet.Proposer.LoginName,
+						cet.Proposer.ProTime,cet.Proposer.StatusCode,b)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("sql执行失败")
+		return
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		fmt.Println("结果获取失败")
+		return
+	}				
+	if count > 0{
+		fmt.Println("新增成功")
+	}else{
+		fmt.Println("新增失败")
+	}	
+}
+func MySqlUpdateEduProposal(stc int,Cname string,Pno string){
+	var updateSql string
+	if Cname == ""{
+		updateSql = "update EduProposals set Stcode = ? where Pno = ?"
+	}else{
+		updateSql = "update EduProposals set Stcode = ?, Cname = ? where Pno = ?"
+	}
+	stm, err := dbConn.Prepare(updateSql)
+	defer func(){
+		if stm != nil{
+			stm.Close()
+		}
+	}()
+	if err != nil{
+		fmt.Println("预处理失败")
+		return
+	}
+	if Cname == ""{
+		stm.Exec(stc,Pno)
+	}else{
+		stm.Exec(stc,Cname,Pno)
+	}
+}
+func MySqlUpdateCetProposal(stc int,Cname string,Pno string){
+	var updateSql string
+	if Cname == ""{
+		updateSql = "update CetProposals set Stcode = ? where Pno = ?"
+	}else{
+		updateSql = "update CetProposals set Stcode = ?, Cname = ? where Pno = ?"
+	}
+	stm, err := dbConn.Prepare(updateSql)
+	defer func(){
+		if stm != nil{
+			stm.Close()
+		}
+	}()
+	if err != nil{
+		fmt.Println("预处理失败")
+		return
+	}
+	if Cname == ""{
+		res, err := stm.Exec(stc,Pno)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("sql执行失败")
+			return
+		}
+		count, err := res.RowsAffected()
+		if err != nil {
+			fmt.Println("结果获取失败")
+			return
+		}				
+		if count > 0{
+			fmt.Println("新增成功")
+		}else{
+			fmt.Println("新增失败")
+		}
+			
+	}else{
+		res, err := stm.Exec(stc,Cname,Pno)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("sql执行失败")
+			return
+		}
+		count, err := res.RowsAffected()
+		if err != nil {
+			fmt.Println("结果获取失败")
+			return
+		}				
+		if count > 0{
+			fmt.Println("新增成功")
+		}else{
+			fmt.Println("新增失败")
+		}
+	}	
 }

@@ -215,6 +215,8 @@
                             <td><a style="font-weight: 700;" href="/index?obj=edu&index={{$index}}">撤 销</a></td>
                             {{else if eq $ptr.Proposer.StatusCode 1}}
                             <td><a style="font-weight: 700;" href="/query2?entityID={{$ptr.EduItem.EntityID}}">查 看</a></td>
+                            {{else}}
+                            <td>请重新申请</td>
                             {{end}}
                           </tr>
                         {{end}}
@@ -252,6 +254,8 @@
                             <td><a style="font-weight: 700;" href="/index?obj=cet&index={{$index}}">撤 销</a></td>
                             {{else if eq $ptr.Proposer.StatusCode 1}}
                             <td><a style="font-weight: 700;" href="/query3?entityID={{$ptr.CetItem.EntityID}}">查 看</a></td>
+                            {{else}}
+                            <td>请重新申请</td>
                             {{end}}
                         </tr>
                         {{end}}
