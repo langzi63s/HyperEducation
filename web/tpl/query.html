@@ -212,20 +212,4 @@
 
     <script src="assets/js/script.js"></script>
 </body>
-<script type="text/javascript">
-  $(function() {
-    var inputs = $('input[type="text"]');
-    // 提交按钮
-    $('.bttn-mid btn-fill').click(function() {
-      // 如果为空 报错提示
-      for (var i = 0; i < inputs.length; i++) {
-        if (!($(inputs[i]).val())) {
-          return;
-        }
-      }
-      // 成功后提交数据
-      $("form[name='queryForm']").submit()
-    })
-  })
-</script>
 </html>

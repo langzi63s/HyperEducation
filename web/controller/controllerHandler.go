@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"education/service"
 	"fmt"
-	"time"
 	"strconv"
 )
 
@@ -38,8 +37,6 @@ var data = &struct {
 }
 func dataReset(){
 	data.Flag = false
-	//data.Edu = service.Education{}
-	//data.CurCet = service.CertificateObj{}
 	data.CurPicHashCode = ""
 	data.Msg = ""
 	data.DataOk = true
@@ -57,9 +54,6 @@ func userCheck(w http.ResponseWriter, r *http.Request){
 
 func (app *Application) LoginView(w http.ResponseWriter, r *http.Request)  {
 	ShowView(w, r, "login.html", data)
-}
-func (app *Application) AdminLoginView(w http.ResponseWriter, r *http.Request)  {
-	ShowView(w, r, "login-2.html", data)
 }
 func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 	userCheck(w,r)
@@ -80,9 +74,7 @@ func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 	if(obj == "edu"){
 		data.PersonalSpace.EduPtrList[index].UpdateStatusCode(-1,"")
 	}else if(obj == "cet"){
-		msg,_ := data.PersonalSpace.CetPtrList[index].UpdateStatusCode(-1,"")
-		fmt.Println(msg)
-		fmt.Println(*data.PersonalSpace.CetPtrList[index])
+		data.PersonalSpace.CetPtrList[index].UpdateStatusCode(-1,"")
 	}
 	ShowView(w, r, "index.html", data)
 }
@@ -95,7 +87,8 @@ func (app *Application) Help(w http.ResponseWriter, r *http.Request)  {
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	loginName := r.FormValue("loginName")
 	password := r.FormValue("password")
-	if MySqlLoginCheck(loginName,password){
+	res,_ := MySqlLoginCheck(loginName,password)
+	if res{
 		data.CurrentUser = user
 		app.Index(w,r)
 		return
@@ -104,22 +97,9 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	data.Flag = true
 	ShowView(w, r, "login.html", data)
 }
-func (app *Application) Login_2(w http.ResponseWriter, r *http.Request) {
-	loginName := r.FormValue("loginName")
-	password := r.FormValue("password")
-	if MySqlLoginCheck(loginName,password){
-		data.CurrentUser = user
-		app.Index(w,r)
-		return
-	}
-	defer dataReset()
-	data.Flag = true
-	ShowView(w, r, "login-2.html", data)
-}
 
 // 用户登出
 func (app *Application) LoginOut(w http.ResponseWriter, r *http.Request)  {
-	defer dataReset()
 	data.CurrentUser = User{}
 	ShowView(w, r, "login.html", data)
 }
@@ -181,18 +161,7 @@ func (app *Application) AddEdu(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//提交到待认证列表
-	tStr := time.Now().Format("2006-01-02 15:04:05")
-	proNo := service.Sha256(data.CurrentUser.LoginName+tStr)
-	EduWaitingToApproveObj :=EduWaitingToApproveStruct{
-		Proposer:ProposerStruct {
-			LoginName:data.CurrentUser.LoginName,
-			ProTime:tStr,
-			ProNo:proNo[0:10],
-			StatusCode:0,
-		},
-		EduItem:edu,
-	}
-	AddEduProposal(EduWaitingToApproveObj)
+	AddEduProposal(&edu,data.CurrentUser.LoginName)
 	data.Flag = true
 	data.Msg = "添加成功！敬请等待认证"
 	ShowView(w, r, "addEdu.html", data)
@@ -232,18 +201,7 @@ func (app *Application) AddCet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//提交到待认证列表
-	tStr := time.Now().Format("2006-01-02 15:04:05")
-	proNo := service.Sha256(data.CurrentUser.LoginName+tStr)
-	CetWaitingToApproveObj :=CetWaitingToApproveStruct{
-		Proposer:ProposerStruct{
-			LoginName:data.CurrentUser.LoginName,
-			ProTime:tStr,
-			ProNo:proNo[0:10],
-			StatusCode:0,
-		},
-		CetItem:cet,
-	}
-	AddCetProposal(CetWaitingToApproveObj)
+	AddCetProposal(&cet,data.CurrentUser.LoginName)
 	data.Msg = "添加成功！敬请等待认证"
 	data.Flag = true
 	ShowView(w, r, "addCet.html", data)
@@ -415,7 +373,6 @@ func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
 	data.Flag = true
 	data.Msg = "交易成功！交易编号：" + txId
 	EduWaitingToApproveList[index].UpdateStatusCode(1,data.CurrentUser.LoginName)
-	EduWaitingToApproveList[index].Proposer.ConfirmLoginName = data.CurrentUser.LoginName
 	ShowView(w, r, "confirmResult.html", data)
 }
 func (app *Application) CetConfirm(w http.ResponseWriter, r *http.Request){
@@ -431,7 +388,6 @@ func (app *Application) CetConfirm(w http.ResponseWriter, r *http.Request){
 	data.Flag = true
 	data.Msg = "交易成功！交易编号：" + txId
 	CetWaitingToApproveList[index].UpdateStatusCode(1,data.CurrentUser.LoginName)
-	CetWaitingToApproveList[index].Proposer.ConfirmLoginName = data.CurrentUser.LoginName
 	ShowView(w, r, "confirmResult2.html", data)
 }
 // 修改/添加新信息

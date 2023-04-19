@@ -94,8 +94,7 @@
                         <h2>教育存证共享系统</h2>
                     </div>
                     <ul>
-                        <li>Home
-                        <br><i class="flaticon-home"></i>
+                        <li><i class="flaticon-home"></i>Home
                         </li>
                     </ul>
                 </div>
@@ -216,7 +215,7 @@
                             {{else if eq $ptr.Proposer.StatusCode 1}}
                             <td><a style="font-weight: 700;" href="/query2?entityID={{$ptr.EduItem.EntityID}}">查 看</a></td>
                             {{else}}
-                            <td>请重新申请</td>
+                            <th>请重新申请</th>
                             {{end}}
                           </tr>
                         {{end}}
@@ -240,7 +239,7 @@
                         {{range $index,$ptr := .PersonalSpace.CetPtrList}}
                         <tr>
                             <th>{{$index}}</th>
-                            <th>四六级证书</th>
+                            <th>{{$ptr.CetItem.Level}}级证书</th>
                             <td class="cl-red">{{$ptr.Proposer.ProNo}}</td>
                             <td>{{$ptr.Proposer.ProTime}}</td>
                             {{if eq $ptr.Proposer.StatusCode 0}}
@@ -255,7 +254,7 @@
                             {{else if eq $ptr.Proposer.StatusCode 1}}
                             <td><a style="font-weight: 700;" href="/query3?entityID={{$ptr.CetItem.EntityID}}">查 看</a></td>
                             {{else}}
-                            <td>请重新申请</td>
+                            <th>请重新申请</th>
                             {{end}}
                         </tr>
                         {{end}}

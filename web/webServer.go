@@ -20,9 +20,7 @@ func WebStart(app controller.Application)  {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs2))
 	// 指定路由信息(匹配请求)
 	http.HandleFunc("/", app.LoginView)
-	http.HandleFunc("/adminlogin", app.AdminLoginView)
 	http.HandleFunc("/login", app.Login)
-	http.HandleFunc("/login-2", app.Login_2)
 	http.HandleFunc("/loginout", app.LoginOut)
 
 	http.HandleFunc("/index", app.Index)

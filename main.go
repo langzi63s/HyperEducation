@@ -1,14 +1,13 @@
 package main
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"fmt"
 	"education/sdkInit"
 	"education/service"
 	"education/web"
 	"education/web/controller"
 	"os"
-
 )
 
 const (
@@ -63,7 +62,8 @@ func main() {
 
 	// invoke chaincode set status
 	fmt.Println(">> 通过链码外部服务设置链码状态......")
-
+	//提交申请
+	
 	edu := service.Education{
 		Name: "刘嘉楷",
 		Gender: "男",
@@ -103,48 +103,20 @@ func main() {
 		TestNo:"310063222201815",
 		Score:"510",
 	}
+	controller.AddEduProposal(&edu,"bob")
+	controller.AddCetProposal(&cet,"bob")
+	
+	
 	serviceSetup, err := service.InitService(info.ChaincodeID, info.ChannelID, info.Orgs[0], sdk)
 	if err!=nil{
 		fmt.Println()
 		os.Exit(-1)
 	}
-	msg, err := serviceSetup.SaveEdu(edu)
-	if err != nil {
-		fmt.Println(err.Error())
-	}else {
-		fmt.Println("信息发布成功, 交易编号为: " + msg)
-	}
-	msg, err = serviceSetup.SaveCet(cet)
-	if err != nil {
-		fmt.Println(err.Error())
-	}else {
-		fmt.Println("信息发布成功, 交易编号为: " + msg)
-	}
-	msg, err = serviceSetup.SaveCet(cet2)
-	if err != nil {
-		fmt.Println(err.Error())
-	}else {
-		fmt.Println("信息发布成功, 交易编号为: " + msg)
-	}
-	result, err := serviceSetup.FindEduInfoByEntityID("32243120011221001X")
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		var edu service.Education
-		json.Unmarshal(result, &edu)
-		fmt.Println("根据身份证号码查询信息成功：")
-		fmt.Println(edu)
-	}
-
-	result, err = serviceSetup.FindCetInfoByEntityID("32243120011221001X")
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		var Certificates []service.CetHistoryItem
-		json.Unmarshal(result, &Certificates)
-		fmt.Println("根据身份证号码查询信息成功：")
-		fmt.Println(Certificates)
-	}
+	serviceSetup.SaveEdu(edu)
+	controller.EduWaitingToApproveList[0].UpdateStatusCode(1,"school")
+	serviceSetup.SaveCet(cet)
+	controller.CetWaitingToApproveList[0].UpdateStatusCode(1,"school")
+	controller.AddCetProposal(&cet2,"bob")
 	app := controller.Application{
 		Setup: serviceSetup,
 	}
