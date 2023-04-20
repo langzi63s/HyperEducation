@@ -21,6 +21,7 @@ func WebStart(app controller.Application)  {
 	// 指定路由信息(匹配请求)
 	http.HandleFunc("/", app.LoginView)
 	http.HandleFunc("/login", app.Login)
+	http.HandleFunc("/register", app.Register)
 	http.HandleFunc("/loginout", app.LoginOut)
 
 	http.HandleFunc("/index", app.Index)

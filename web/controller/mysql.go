@@ -22,12 +22,12 @@ func MySqlInit(){
 	dbConn.Exec("truncate table EduProposals")
 	dbConn.Exec("truncate table CetProposals")
 }
-func MySqlLoginCheck(loginName string,password string) (bool,bool){
+func MySqlLoginCheck(loginName string,password string) (bool,int){
 	query := "select * from Users where LoginName="+"\""+loginName+"\""
 	rows, err := dbConn.Query(query)
 	if err != nil {
 		fmt.Println(err)
-		return false,false
+		return false,-1
 	}
 	defer func(){
 		if rows != nil{
@@ -35,19 +35,40 @@ func MySqlLoginCheck(loginName string,password string) (bool,bool){
 		}
 	}()
 	for rows.Next(){
-		rows.Scan(&user.LoginName,&user.Password,&user.Identity,&user.IdentificationCode)
+		rows.Scan(&user.LoginName,&user.Password,&user.Identity,&user.IdentificationCode,&user.StatusCode)
 	}
-	if user.LoginName == ""{
-		return false,true
+	if user.LoginName != loginName{
+		return false,-1
 	}
 	if user.Password == password{
-		return true,false
+		return true,user.StatusCode
 	}
-	return false,false
+	return false,user.StatusCode
+}
+func MySqlIdentificationCodeExist(IdentificationCode string) bool{
+	query := "select IdentificationCode from Users where IdentificationCode="+"\""+IdentificationCode+"\""
+	rows, err := dbConn.Query(query)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer func(){
+		if rows != nil{
+			rows.Close()
+		}
+	}()
+	var ic string
+	for rows.Next(){
+		rows.Scan(&ic)
+	}
+	if ic == IdentificationCode{
+		return true
+	}
+	return false
 }
 func MySqlInsertUsers(user *User){
 	var insertSql string
-	insertSql = "insert into Users values(?,?,?,?)"
+	insertSql = "insert into Users values(?,?,?,?,?)"
 	stm, err := dbConn.Prepare(insertSql)
 	defer func(){
 		if stm != nil{
@@ -58,9 +79,23 @@ func MySqlInsertUsers(user *User){
 		fmt.Println("预处理失败")
 		return
 	}
-	stm.Exec(user.LoginName,user.Password,user.Identity,user.IdentificationCode)
+	stm.Exec(user.LoginName,user.Password,user.Identity,user.IdentificationCode,user.StatusCode)
 }
-
+func MySqlUpdateUsers(LoginName string,No int){
+	var updateSql string
+	updateSql = "update Users set StatusCode = ? where LoginName = ?"
+	stm, err := dbConn.Prepare(updateSql)
+	defer func(){
+		if stm != nil{
+			stm.Close()
+		}
+	}()
+	if err != nil{
+		fmt.Println("预处理失败")
+		return
+	}
+	_, err = stm.Exec(No, LoginName)
+}
 func MySqlInsertEduProposal(edu *EduWaitingToApproveStruct){
 	stm, err := dbConn.Prepare("insert into EduProposals values(?,?,?,?,?,default)")
 	defer func(){

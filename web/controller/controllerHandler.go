@@ -51,10 +51,95 @@ func userCheck(w http.ResponseWriter, r *http.Request){
 		ShowView(w, r, "login.html", data)
 	}
 }
-
+func myAtoi(str string) int{
+	ret,_ := strconv.Atoi(str)
+	return ret
+}
 func (app *Application) LoginView(w http.ResponseWriter, r *http.Request)  {
 	ShowView(w, r, "login.html", data)
 }
+func (app *Application) Help(w http.ResponseWriter, r *http.Request)  {
+
+	ShowView(w, r, "help.html", data)
+}
+
+// 用户登录
+func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
+	loginName := r.FormValue("loginName")
+	password := r.FormValue("password")
+	ok,code := MySqlLoginCheck(loginName,password)
+	if ok{
+		data.CurrentUser = user
+		app.Index(w,r)
+		return
+	}
+	defer dataReset()
+	data.Flag = true
+	if code == 1{
+		data.Msg = "密码输入错误!请重新输入!"
+	}else if code == 0{
+		data.Msg = "您的申请还未通过！敬请等待!"
+	}else{
+		data.Msg = "用户名不存在!请重新输入!"
+	}
+	ShowView(w, r, "login.html", data)
+}
+
+// 用户登出
+func (app *Application) LoginOut(w http.ResponseWriter, r *http.Request)  {
+	data.CurrentUser = User{}
+	ShowView(w, r, "login.html", data)
+}
+func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
+	if r.Method =="GET"{
+		ShowView(w, r, "register.html", data)
+		return
+	}
+	defer dataReset()
+	c_user := User{
+		LoginName :r.FormValue("loginName"),
+		Password : r.FormValue("password"),
+		Identity : r.FormValue("identity"),
+		IdentificationCode : r.FormValue("identificationCode"),
+		StatusCode:0,
+	}
+	passwordAgain := r.FormValue("passwordAgain")
+	defer dataReset()
+	_,code := MySqlLoginCheck(c_user.LoginName,"")
+	data.Flag= true
+	if code != -1{
+		data.Msg = "用户名已存在！请重新输入！"
+		ShowView(w, r, "register.html", data)
+		return
+	}
+	if c_user.Password != passwordAgain{
+		data.Msg = "两次输入的密码不一致！"
+		ShowView(w, r, "register.html", data)
+		return 
+	}
+	if MySqlIdentificationCodeExist(c_user.IdentificationCode){
+		if c_user.Identity == Individual{
+			data.Msg = "该身份证号已被注册！"
+		}else if c_user.Identity == Admin{
+			data.Msg = "管理员标识码重复！"
+		}else{
+			data.Msg = "该企业机构标识码已注册！"
+		}
+		ShowView(w, r, "register.html", data)
+		return 
+	}
+	/* 添加到注册列表*/
+	if c_user.Identity == Individual{
+		data.Msg = "注册成功！请登录！"
+		c_user.StatusCode = 1
+		AddUserProposal(&c_user)
+		ShowView(w, r, "login.html", data)
+	}else{
+		data.Msg = "注册申请成功！敬请等待认证！"
+		ShowView(w, r, "login.html", data)
+		AddUserProposal(&c_user)
+	}
+} 
 func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 	userCheck(w,r)
 	defer dataReset()
@@ -77,31 +162,6 @@ func (app *Application) Index(w http.ResponseWriter, r *http.Request) {
 		data.PersonalSpace.CetPtrList[index].UpdateStatusCode(-1,"")
 	}
 	ShowView(w, r, "index.html", data)
-}
-func (app *Application) Help(w http.ResponseWriter, r *http.Request)  {
-
-	ShowView(w, r, "help.html", data)
-}
-
-// 用户登录
-func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
-	loginName := r.FormValue("loginName")
-	password := r.FormValue("password")
-	res,_ := MySqlLoginCheck(loginName,password)
-	if res{
-		data.CurrentUser = user
-		app.Index(w,r)
-		return
-	}
-	defer dataReset()
-	data.Flag = true
-	ShowView(w, r, "login.html", data)
-}
-
-// 用户登出
-func (app *Application) LoginOut(w http.ResponseWriter, r *http.Request)  {
-	data.CurrentUser = User{}
-	ShowView(w, r, "login.html", data)
 }
 
 // 显示添加信息页面
@@ -318,7 +378,7 @@ func (app *Application) CetConfirmShow(w http.ResponseWriter, r *http.Request){
 	event := r.FormValue("event")
 	var index int
 	if indexStr != ""{
-		index,_ = strconv.Atoi(indexStr)
+		index = myAtoi(indexStr)
 	}
 	if event == "withdraw"{
 		CetWaitingToApproveList[index].UpdateStatusCode(-1,"")
@@ -343,7 +403,7 @@ func (app *Application) EduConfirmShow(w http.ResponseWriter, r *http.Request){
 	event := r.FormValue("event")
 	var index int
 	if indexStr != ""{
-		index,_ = strconv.Atoi(indexStr)
+		index = myAtoi(indexStr)
 	}
 	if event == "withdraw"{
 		EduWaitingToApproveList[index].UpdateStatusCode(-1,"")
@@ -360,10 +420,14 @@ func (app *Application) EduConfirmShow(w http.ResponseWriter, r *http.Request){
 	}
 	ShowView(w, r, "educonfirm.html", data)
 }
+
 func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
+	if r.Method == "GET"{
+		ShowView(w, r, "confirmResult.html", data)
+	}
 	defer dataReset()
 	indexStr := r.FormValue("index")
-	index,_ := strconv.Atoi(indexStr)
+	index :=  myAtoi(indexStr) 
 	txId,err := app.Setup.SaveEdu(EduWaitingToApproveList[index].EduItem)
 	if err != nil{
 		data.Flag = true
@@ -375,10 +439,14 @@ func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
 	EduWaitingToApproveList[index].UpdateStatusCode(1,data.CurrentUser.LoginName)
 	ShowView(w, r, "confirmResult.html", data)
 }
+
 func (app *Application) CetConfirm(w http.ResponseWriter, r *http.Request){
+	if r.Method == "GET"{
+		ShowView(w, r, "confirmResult2.html", data)
+	}
 	defer dataReset()
 	indexStr := r.FormValue("index")
-	index,_ := strconv.Atoi(indexStr)
+	index := myAtoi(indexStr)
 	txId,err := app.Setup.SaveCet(CetWaitingToApproveList[index].CetItem)
 	if err != nil{
 		data.Flag = true

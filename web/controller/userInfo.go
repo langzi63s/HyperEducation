@@ -14,6 +14,7 @@ type User struct {
 	Password	string `db:"Password"` 
 	Identity 	string `db:"Identity"`
 	IdentificationCode	string `db:"IdentificationCode"`
+	StatusCode int `db:"StatusCode"`
 }
 type PersonalSpace struct{
 	CetPtrList []*CetWaitingToApproveStruct
@@ -37,10 +38,18 @@ type EduWaitingToApproveStruct struct{
 	EduItem service.Education
 }
 var user User
+const (
+	Individual = "Individual"
+	Enterprises = "Enterprises"
+	Admin = "Admin"
+	Member = "Member"
+)
 var (
 	CetWaitingToApproveList []CetWaitingToApproveStruct
 	EduWaitingToApproveList []EduWaitingToApproveStruct
+	UserWaitingToApproveList []User
 )
+//init 初始化
 func init() {
 	PersonalSpaceMapInit()
 	MySqlInit()
@@ -48,6 +57,7 @@ func init() {
 func PersonalSpaceMapInit(){
 	PersonalSpaceMap = make(map[string]PersonalSpace)
 }
+//添加证书申请
 func AddCetProposal(cet *service.CertificateObj,ProLoginName string){
 	tStr := time.Now().Format("2006-01-02 15:04:05")
 	proNo := service.Sha256(ProLoginName+tStr)
@@ -108,4 +118,19 @@ func (e *EduWaitingToApproveStruct) UpdateStatusCode(statusCode int,Cname string
 	e.Proposer.ConfirmLoginName = Cname
 	return "更新成功",true
 }
-
+//添加用户，注册
+func AddUserProposal(user *User){
+	MySqlInsertUsers(user)
+	UserWaitingToApproveList = append(UserWaitingToApproveList,*user)
+}
+func (u *User) UpdateStatusCode(statusCode int) (string, bool){
+	if statusCode != 0 && statusCode != -1 && statusCode != 1{
+		return "传入参数有误,函数执行失败",false
+	}
+	if u.StatusCode == statusCode{
+		return "状态一致无需改变",true
+	}
+	MySqlUpdateUsers(u.LoginName,statusCode)
+	u.StatusCode = statusCode
+	return "更新成功",true
+}
