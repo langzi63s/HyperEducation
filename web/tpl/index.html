@@ -71,6 +71,9 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
+                        {{if eq .CurrentUser.Identity "Admin"}}
+                        <li class="nav-item"><a class="nav-link" href="/userconfirm">成员认证</a></li>
+                        {{end}}
                         <li class="nav-item"><a class="nav-link" href="#proposal">我的申请</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">欢迎登录，{{.CurrentUser.LoginName}}</a>

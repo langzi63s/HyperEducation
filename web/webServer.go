@@ -46,6 +46,7 @@ func WebStart(app controller.Application)  {
 
 	http.HandleFunc("/cetconfirm", app.CetConfirmShow)
 	http.HandleFunc("/educonfirm", app.EduConfirmShow)
+	http.HandleFunc("/userconfirm", app.UserConfirmShow)
 
 	http.HandleFunc("/eduAuthentication", app.EduConfirm)
 	http.HandleFunc("/cetAuthentication", app.CetConfirm)

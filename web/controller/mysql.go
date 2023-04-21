@@ -45,6 +45,23 @@ func MySqlLoginCheck(loginName string,password string) (bool,int){
 	}
 	return false,user.StatusCode
 }
+func MySqlUnconfirmedUserInit(){
+	query := "select * from Users where StatusCode = 0"
+	rows, err := dbConn.Query(query)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer func(){
+		if rows != nil{
+			rows.Close()
+		}
+	}()
+	for rows.Next(){
+		rows.Scan(&user.LoginName,&user.Password,&user.Identity,&user.IdentificationCode,&user.StatusCode)
+		UserWaitingToApproveList = append(UserWaitingToApproveList,user)
+	}
+}
 func MySqlIdentificationCodeExist(IdentificationCode string) bool{
 	query := "select IdentificationCode from Users where IdentificationCode="+"\""+IdentificationCode+"\""
 	rows, err := dbConn.Query(query)

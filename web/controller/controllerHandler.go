@@ -24,6 +24,7 @@ var data = &struct {
 	CurCet service.CertificateObj
 	CetWTBAList []*CetWaitingToApproveStruct
 	EduWTBAList []*EduWaitingToApproveStruct
+	UserWTBAList []*User
 }{
 	CurrentUser:User{},
 	Flag:false,
@@ -420,7 +421,29 @@ func (app *Application) EduConfirmShow(w http.ResponseWriter, r *http.Request){
 	}
 	ShowView(w, r, "educonfirm.html", data)
 }
-
+func (app *Application) UserConfirmShow(w http.ResponseWriter, r *http.Request){
+	userCheck(w,r)
+	//defer dataReset()
+	indexStr := r.FormValue("index")
+	event := r.FormValue("event")
+	var index int
+	if indexStr != ""{
+		index = myAtoi(indexStr)
+	}
+	if event == "withdraw"{
+		UserWaitingToApproveList[index].UpdateStatusCode(-1)
+	}else if event == "confirm"{
+		UserWaitingToApproveList[index].UpdateStatusCode(1)
+		ShowView(w, r, "userconfirm.html", data)
+	}else{
+		if(len(data.UserWTBAList) < len(UserWaitingToApproveList)){
+			for i := len(data.UserWTBAList);i < len(UserWaitingToApproveList);i++{
+				data.UserWTBAList = append(data.UserWTBAList,&UserWaitingToApproveList[i])
+			}
+		}
+	}
+	ShowView(w, r, "userconfirm.html", data)
+}
 func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
 	if r.Method == "GET"{
 		ShowView(w, r, "confirmResult.html", data)

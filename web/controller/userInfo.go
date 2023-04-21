@@ -53,6 +53,7 @@ var (
 func init() {
 	PersonalSpaceMapInit()
 	MySqlInit()
+	MySqlUnconfirmedUserInit()
 }
 func PersonalSpaceMapInit(){
 	PersonalSpaceMap = make(map[string]PersonalSpace)
@@ -121,7 +122,9 @@ func (e *EduWaitingToApproveStruct) UpdateStatusCode(statusCode int,Cname string
 //添加用户，注册
 func AddUserProposal(user *User){
 	MySqlInsertUsers(user)
-	UserWaitingToApproveList = append(UserWaitingToApproveList,*user)
+	if user.StatusCode == 0{
+		UserWaitingToApproveList = append(UserWaitingToApproveList,*user)
+	}
 }
 func (u *User) UpdateStatusCode(statusCode int) (string, bool){
 	if statusCode != 0 && statusCode != -1 && statusCode != 1{
