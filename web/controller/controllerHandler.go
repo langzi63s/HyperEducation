@@ -445,9 +445,6 @@ func (app *Application) UserConfirmShow(w http.ResponseWriter, r *http.Request){
 	ShowView(w, r, "userconfirm.html", data)
 }
 func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
-	if r.Method == "GET"{
-		ShowView(w, r, "confirmResult.html", data)
-	}
 	defer dataReset()
 	indexStr := r.FormValue("index")
 	index :=  myAtoi(indexStr) 
@@ -464,9 +461,6 @@ func (app *Application) EduConfirm(w http.ResponseWriter, r *http.Request){
 }
 
 func (app *Application) CetConfirm(w http.ResponseWriter, r *http.Request){
-	if r.Method == "GET"{
-		ShowView(w, r, "confirmResult2.html", data)
-	}
 	defer dataReset()
 	indexStr := r.FormValue("index")
 	index := myAtoi(indexStr)

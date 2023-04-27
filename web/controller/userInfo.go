@@ -61,7 +61,7 @@ func PersonalSpaceMapInit(){
 //添加证书申请
 func AddCetProposal(cet *service.CertificateObj,ProLoginName string){
 	tStr := time.Now().Format("2006-01-02 15:04:05")
-	proNo := service.Sha256(ProLoginName+tStr)
+	proNo := service.Sha256(ProLoginName+tStr+"cet")
 	CetWaitingToApproveObj :=CetWaitingToApproveStruct{
 		Proposer:ProposerStruct{
 			LoginName:ProLoginName,
@@ -79,7 +79,7 @@ func AddCetProposal(cet *service.CertificateObj,ProLoginName string){
 }
 func AddEduProposal(edu *service.Education,ProLoginName string){
 	tStr := time.Now().Format("2006-01-02 15:04:05")
-	proNo := service.Sha256(ProLoginName+tStr)
+	proNo := service.Sha256(ProLoginName+tStr+"edu")
 	EduWaitingToApproveObj :=EduWaitingToApproveStruct{
 		Proposer:ProposerStruct {
 			LoginName:ProLoginName,
